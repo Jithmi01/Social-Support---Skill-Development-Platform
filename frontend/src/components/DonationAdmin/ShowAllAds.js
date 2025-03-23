@@ -134,6 +134,7 @@ const Ads = () => {
 
     return (
         <div style={{ padding: '40px' }}>
+          
             <Card style={{ borderRadius: 12, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',backgroundColor:'#0D1A45' }}>
                 <Space style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <Title level={3} style={{ margin: 0, fontWeight:'700', color:'white' }}>Advertisement Summary</Title>

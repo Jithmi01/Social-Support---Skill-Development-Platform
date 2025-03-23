@@ -10,6 +10,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { Layout, Menu } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
+import Navbar from "../components/Navbar";
 
 const UserLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -38,9 +39,9 @@ const UserLayout = ({ children }) => {
 
   return (
     <>
-      <Header_bar />
+      <Navbar/>
       <Layout>
-        <Sider className="sidebar"
+        {/* <Sider className="sidebar"
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
@@ -51,7 +52,7 @@ const UserLayout = ({ children }) => {
             mode="inline"
             items={items}
           />
-        </Sider>
+        </Sider> */}
         <Layout className="site-layout">
           <Content>{children}</Content>
           <Footer style={{ textAlign: "center" }}>
@@ -60,11 +61,11 @@ const UserLayout = ({ children }) => {
         </Layout>
       </Layout>
 
-      style{
+      {/* style{
         `
         .sidebar: paddingTop:20px
         `
-      }
+      } */}
     </>
   );
 };
