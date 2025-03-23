@@ -13,6 +13,10 @@ const DetailsPrint = () => {
         documentTitle: "Event Details",
     });
 
+
+
+    
+
     const [eventNo, seteventNo] = useState("");
     const [eventName, seteventName] = useState("");
     const [eventPlace, seteventPlace] = useState("");
