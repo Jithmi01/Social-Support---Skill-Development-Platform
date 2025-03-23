@@ -1,202 +1,112 @@
-import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Card, Typography, Popconfirm, message } from "antd";
-import axios from "axios";
-import { FilePdfOutlined, DeleteOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from 'react';
+import { SearchIcon, FileTextIcon, TrashIcon, ArrowUpDownIcon } from 'lucide-react';
+import axios from 'axios';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { useParams } from "react-router-dom";
 import logo from "../../assets/images/EmpowerHub.png";
-import "../../assets/styles/showDonate.css";
-import CustomRow from '../common/Form_header';
-import WrapperCard from '../common/Wrapper_card';
-
-const { Search } = Input;
-const { Title } = Typography;
 
 const Donations = () => {
   const [donate, setDonate] = useState([]);
-  const { _id } = useParams();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
-    fetchDonations();
+    axios.get('http://localhost:4000/donation/')
+      .then((res) => setDonate(res.data))
+      .catch(() => alert('Failed to fetch donations'));
   }, []);
 
-  const fetchDonations = () => {
-    axios
-      .get("http://localhost:4000/donation/")
-      .then((res) => {
-        setDonate(res.data);
-      })
-      .catch((err) => {
-        message.error("Failed to fetch donations");
-      });
-  };
-
   const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:4000/donation/${id}`)
+    axios.delete(`http://localhost:4000/donation/${id}`)
       .then(() => {
-        message.success("Donation record removed successfully");
-        fetchDonations();
+        alert('Donation record removed successfully');
+        setDonate(donate.filter((item) => item._id !== id));
       })
-      .catch(() => {
-        message.error("Failed to remove donation");
-      });
+      .catch(() => alert('Failed to remove donation'));
   };
 
-  const generatePdf = () => {
-    const doc = new jsPDF();
+  const handleSort = () => {
+    const sortedDonations = [...donate].sort((a, b) => {
+      return sortOrder === 'asc' ? a.amount - b.amount : b.amount - a.amount;
+    });
+    setDonate(sortedDonations);
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
 
-    // Define Image Properties
-    const imgWidth = 20; // Adjust size
-    const imgHeight = 20; 
-    const imgX = 10; // Position to left side
-    const imgY = 10;  
-
-    // Convert image to Base64 and Add to PDF
-    const img = new Image();
-    img.src = logo;
-    img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const imgBase64 = canvas.toDataURL('image/png');
-
-        // Add the Image
-        doc.addImage(imgBase64, 'PNG', imgX, imgY, imgWidth, imgHeight);
-
-        // Company Details (Aligned to Center)
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('EmpowerHub - Skill Development & Learning Platform', 105, 20, { align: 'center' });
-
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal');
-        doc.text('No.40, Kaduwela Road, Malabe', 105, 28, { align: 'center' });
-        doc.text('Tel: +94 77 444 5555 | Email: empowerhub@gmail.com', 105, 36, { align: 'center' });
-
-        // Separator Line
-        doc.setDrawColor(0, 0, 0);
-        doc.setLineWidth(0.5);
-        doc.line(10, 45, 200, 45);
-
-        // PDF Title
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('My Donation History', 105, 55, { align: 'center' });
-
-        // Table
-        // Table
-doc.autoTable({
-  startY: 65,
-  columns: [
-      { header: 'Name', dataKey: 'name' },
-      { header: 'Email', dataKey: 'email' },
-      { header: 'Contact', dataKey: 'contact' },
-      { header: 'Amount', dataKey: 'amount' },
-      { header: 'Status', dataKey: 'status' },
-      { header: 'Donated To', dataKey: 'helpGiven' },
-  ],
-  body: donate.map(item => ({
-      name: item.name,
-      email: item.email,
-      contact: item.contact,
-      amount: item.amount,
-      status: item.status,
-      helpGiven: item.helpGiven,
-  })),
-  theme: 'grid',
-});
-
-
-        // Save PDF after everything is loaded
-        doc.save('Donation History Report.pdf');
-    };
-};
-
-  const columns = [
-    { title: "Name", dataIndex: "name", key: "name", sorter: (a, b) => a.name.localeCompare(b.name) },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Contact", dataIndex: "contact", key: "contact" },
-    { title: "Amount", dataIndex: "amount", key: "amount", sorter: (a, b) => a.amount - b.amount },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Donated To", dataIndex: "helpGiven", key: "helpGiven" },
-    {
-      title: "Action",
-      key: "action",
-      align: "center",
-      render: (text, record) => (
-        <Popconfirm
-          title="Are you sure you want to delete this donation?"
-          onConfirm={() => handleDelete(record._id)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button type="primary" danger icon={<DeleteOutlined />} />
-        </Popconfirm>
-      ),
-    },
-  ];
+  const filteredDonations = donate.filter((item) =>
+    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.email.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.contact.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.amount.toString().includes(searchText) ||
+    item.helpGiven.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
-    <div style={{ maxWidth: 1200, margin: "50px auto", padding: 20 }}>
-
-<WrapperCard style={{ backgroundColor: '#0D1A45', height: '50px', paddingTop: '10px', borderRadius: 6, marginTop: '15px' }}>
-                    <CustomRow style={{ justifyContent: 'center' }}>
-                        <h2 style={{ color: 'white', margin: 0, fontSize: '24px' }}>My Donation History</h2>
-                    </CustomRow>
-                </WrapperCard>
-
-      <Card style={{ borderRadius: 10, boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)", backgroundColor: "#f8f9fa" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          
-          <Search 
-            placeholder="Search by name..." 
-            onChange={(e) => setSearchText(e.target.value)} 
-            style={{ width: 300 }} 
-            allowClear 
-          />
-          <Button type="primary" style={{ backgroundColor: 'green', borderColor: 'green' }} icon={<FilePdfOutlined />} onClick={generatePdf}>
-            Download Report
-          </Button>
-        </div>
-        <Table
-          columns={columns}
-          dataSource={donate.filter((item) =>
-            item.name.toLowerCase().includes(searchText.toLowerCase())
-          )}
-          bordered
-          pagination={{ pageSize: 5 }}
-          rowKey="_id"
-          rowClassName={(record, index) => (index % 2 === 0 ? "even-row" : "odd-row")}
-          components={{
-            header: {
-                cell: ({ children, ...restProps }) => (
-                    <th {...restProps} style={{ backgroundColor: '#0077B6', color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
-                        {children}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
+            <h1 className="text-2xl font-bold text-white">Donation History</h1>
+            <p className="text-blue-100 mt-2">Track and manage your contributions</p>
+          </div>
+          <div className="p-6">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+              <div className="relative w-full md:w-64">
+                <input
+                  type="text"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Search donations..."
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <SearchIcon size={18} className="text-gray-400" />
+                </div>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-200 text-gray-700 uppercase text-sm">
+                    <th className="px-6 py-3 font-semibold text-left border border-gray-300">Name</th>
+                    <th className="px-6 py-3 font-semibold text-left border border-gray-300">Email</th>
+                    <th className="px-6 py-3 font-semibold text-left border border-gray-300">Contact</th>
+                    <th className="px-6 py-3 font-semibold text-left border border-gray-300 cursor-pointer" onClick={handleSort}>
+                      Amount <ArrowUpDownIcon size={14} className="inline ml-1" />
                     </th>
-                )
-            }
-        }}
-        />
-        <style>
-          {`.even-row {
-            background-color: #f0f8ff !important;
-        }
-        .odd-row {
-            background-color: #dbe9f4 !important;
-        }
-        .ant-table-thead > tr > th {
-            background-color: #0077B6 !important;
-            color: white !important;
-            text-align: center !important;
-        }
-          `}
-        </style>
-      </Card>
+                    <th className="px-6 py-3 font-semibold text-left border border-gray-300">Status</th>
+                    <th className="px-6 py-3 font-semibold text-left border border-gray-300">Donated To</th>
+                    <th className="px-6 py-3 font-semibold text-center border border-gray-300">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredDonations.map((item) => (
+                    <tr key={item._id} className="hover:bg-gray-50 transition-colors duration-200">
+                      <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">{item.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.contact}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">${item.amount}</td>
+                      <td className="px-6 py-4 border border-gray-300">
+                        <span className="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.helpGiven}</td>
+                      <td className="px-6 py-4 text-center border border-gray-300">
+                        <button
+                          onClick={() => handleDelete(item._id)}
+                          className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                        >
+                          <TrashIcon size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

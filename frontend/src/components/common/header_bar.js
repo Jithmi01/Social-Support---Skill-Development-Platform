@@ -1,59 +1,35 @@
-import { Layout, Menu, theme, Col, Row } from "antd";
-import logo from "../../assets/images/EmpowerHub.png";
-import "../../assets/styles/style.css";
-import "../../assets/styles/header.css";
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Logout from "../User/Logout";
-const { Header, Content, Footer } = Layout;
-const userName = "John Doe"; // Replace this with the actual user's name
-
-const Header_bar = (props) => {
-  const { opennav, open } = props;
-  const navigate = useNavigate();
-  const [name, setName] = useState(""); // State to hold the username
-  const id = useParams();
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
+import React from 'react'
+import { LogOut, LogOutIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import logo from '../../assets/images/EmpowerHub.png'
+const Header = () => {
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    navigate('/login')
+  }
   return (
-    <Layout>
-      <Header
-        className="site-layout-background"
-        style={{ justifyContent: "space-between" }}
-      >
-        <Row
-          style={{
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Col>
-            <img
-              src={logo}
-              alt="Logo"
-              width={100}
-              style={{ marginTop: "30px",paddingLeft:"30px" }}
-            />
-          </Col>
-          <Col>
-            <h1 style={{ color: "white", fontSize:"25px" }}>EmpowerHub</h1>
-          </Col>
-          <Logout />
-        </Row>
-      </Header>
-      <div>
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["2"]}
-          items={""}
-        />
-        {/* </Header> */}
+    <header className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            {/* Replace with your actual logo */}
+            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+              <span className="text-blue-900 font-bold text-xl">< img src={logo}/></span>
+            </div>
+            <span className="ml-3 text-white text-xl font-semibold">
+              EmpowerHub
+            </span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center px-4 py-2 text-sm text-white hover:text-blue-200 transition-colors duration-200"
+          >
+            <div size={18} className="mr-2" />
+            <LogOut/>LogOut
+          </button>
+        </div>
       </div>
-    </Layout>
-  );
-};
-export default Header_bar;
+    </header>
+  )
+}
+export default Header

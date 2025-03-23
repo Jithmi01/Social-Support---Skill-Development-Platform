@@ -1,100 +1,83 @@
-import { useEffect, useState } from "react";
-import { Card, Col, Row, Typography, Progress } from "antd";
-import WorkIcon from '@mui/icons-material/Work';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-import axios from "axios";
-
-const url1 = "http://localhost:4000/event/getAll";
-
-function Admin() {
-    const { Title } = Typography;
-    const [donate, setDonate] = useState([]);
-    const [jobList, setJobList] = useState([]);
-    const [eventDetails, setAllEventDetails] = useState([]);
-
-    useEffect(() => {
-        axios.get("http://localhost:4000/jobHire/")
-            .then((res) => setJobList(res.data))
-            .catch((err) => alert(err.message));
-    }, []);
-
-    useEffect(() => {
-        axios.get(url1)
-            .then((res) => setAllEventDetails(res.data.Event))
-            .catch(() => alert("Check The Connectivity"));
-    }, []);
-
-    useEffect(() => {
-        axios.get("http://localhost:4000/donation/")
-            .then((res) => setDonate(res.data))
-            .catch((err) => alert(err.message));
-    }, []);
-
-    const totalEvents = eventDetails.length;
-    const totalDonations = donate.length;
-    const totalJobs = jobList.length;
-
-    const count = [
-        {
-            today: "Total Job Posted",
-            title: totalJobs,
-            icon: <WorkIcon style={{ fontSize: 40 }} />,  
-            color: "#25476A", // Dark Blue
-        },
-        {
-            today: "Total Donations",
-            title: totalDonations,
-            icon: <VolunteerActivismIcon style={{ fontSize: 40 }} />, 
-            color: "#6A0DAD", // Purple
-        },
-        {
-            today: "Total Events",
-            title: totalEvents,
-            icon: <EmojiEventsIcon style={{ fontSize: 40 }} />, 
-            color: "#228B22", // Green
-        },
-    ];
-
-    return (
-        <div className="dashboard" style={{ backgroundSize: "cover", backgroundPosition: "center" }}>
-            
-            <div style={{ paddingLeft: 50, paddingRight: 50 }}>
-                <div className="layout-content" style={{ padding: "16px" }}>
-                    <Row gutter={[24, 0]}>
-                        {count.map((c, index) => (
-                            <Col key={index} xs={24} sm={24} md={8} lg={8} xl={8} className="mb-24">
-                                <Card bordered={false} className="circlebox" style={{ backgroundColor: c.color, color: "white", fontSize: 28, fontWeight: "bold", textAlign: "left", padding: 20, boxShadow: "2px 10px 10px 2px lightblue" }}>
-                                    <div className="number" style={{ fontSize: 26, fontFamily: "serif" }}>
-                                        <Row align="middle">
-                                            <Col span={24}>{c.icon}</Col>
-                                            <Col span={24}>
-                                                <Title level={2} style={{ color: "white", fontSize: 36 }}>{c.title}</Title>
-                                                <span style={{ fontSize: 22 }}>{c.today}</span>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
-                    <br />
-                    <Card style={{ boxShadow: "2px 5px 5px 5px lightblue", padding: 20 }}>
-                        <Title level={2} style={{ fontSize: 30, textAlign: "left",marginTop:"-10px" }}>Details Bar</Title>
-                        <Card style={{ backgroundColor: "#f5f5f5", padding: 20, boxShadow: "none" }}>
-                            <Progress percent={totalDonations} strokeColor="#6A0DAD" style={{ height: 20 }} />
-                            <span style={{ fontSize: 20, display: "block", textAlign: "left" }}>Total Donations</span>
-                            <Progress percent={totalEvents} strokeColor="#228B22" style={{ height: 20 }} />
-                            <span style={{ fontSize: 20, display: "block", textAlign: "left" }}>Total Events</span>
-                            <Progress percent={totalJobs} strokeColor="#25476A" style={{ height: 20 }} />
-                            <span style={{ fontSize: 20, display: "block", textAlign: "left" }}>Total Job Posted</span>
-                        </Card>
-                    </Card>
-                    <br />
-                </div>
+import React, { useEffect, useState } from 'react'
+import { BriefcaseIcon, HeartHandshakeIcon, TrophyIcon } from 'lucide-react'
+import axios from 'axios'
+const Dashboard = () => {
+  const [donations, setDonations] = useState([])
+  const [jobs, setJobs] = useState([])
+  const [events, setEvents] = useState([])
+  useEffect(() => {
+    // Fetch data
+    axios
+      .get('http://localhost:4000/donation/')
+      .then((res) => setDonations(res.data))
+      .catch((err) => console.error(err))
+    // Simulated job and event data
+    setJobs([1, 2, 3, 4, 5]) // Replace with actual API call
+    setEvents([1, 2, 3]) // Replace with actual API call
+  }, [])
+  const stats = [
+    {
+      title: 'Total Job Posted',
+      value: jobs.length,
+      icon: <BriefcaseIcon size={40} />,
+      color: 'bg-blue-900',
+      progress: (jobs.length / 10) * 100,
+    },
+    {
+      title: 'Total Donations',
+      value: donations.length,
+      icon: <HeartHandshakeIcon size={40} />,
+      color: 'bg-purple-700',
+      progress: (donations.length / 10) * 100,
+    },
+    {
+      title: 'Total Events',
+      value: events.length,
+      icon: <TrophyIcon size={40} />,
+      color: 'bg-green-700',
+      progress: (events.length / 10) * 100,
+    },
+  ]
+  return (
+    <div className="space-y-8">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className={`${stat.color} rounded-xl shadow-lg p-6 text-white transform transition-transform duration-300 hover:scale-105`}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="mt-1 text-lg">{stat.title}</p>
+              </div>
+              {stat.icon}
             </div>
-        </div>
-    );
+          </div>
+        ))}
+      </div>
+      {/* Progress Section */}
+      <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+        <h2 className="text-2xl font-bold text-gray-800">Details Bar</h2>
+        {stats.map((stat, index) => (
+          <div key={index} className="space-y-2">
+            <div className="flex justify-between text-sm font-medium">
+              <span>{stat.title}</span>
+              <span>{stat.value}</span>
+            </div>
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className={`h-full ${stat.color} transition-all duration-500`}
+                style={{
+                  width: `${stat.progress}%`,
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
-
-export default Admin;
+export default Dashboard

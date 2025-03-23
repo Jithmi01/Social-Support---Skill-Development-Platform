@@ -1,65 +1,87 @@
-import { useState } from "react";
-import Header_bar from "../components/common/header_bar";
-import { useLocation, useNavigate } from "react-router-dom";
-import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-import WorkIcon from '@mui/icons-material/Work';
-import PersonIcon from '@mui/icons-material/Person';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import { Layout, Menu } from "antd";
-import { Content, Footer } from "antd/es/layout/layout";
-import Sider from "antd/es/layout/Sider";
-
+import React, { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  LayoutDashboardIcon,
+  HeartHandshakeIcon,
+  HistoryIcon,
+  BriefcaseIcon,
+  TrophyIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from 'lucide-react'
+import Header from '../components/common/header_bar';
 const AdminLayout = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  function getItem(label, key, icon) {
-    return {
-      key,
-      label,
-      icon,
-      onClick: () => {
-        navigate(key);
-      },
-    };
-  }
-
-  const items = [
-    getItem("Dashboard", "/dashboard", <DashboardIcon  style={{ fontSize: 20 }}/>),
-    getItem("Advertisement", "/showAds", <VolunteerActivismIcon style={{ fontSize: 20 }}/>),
-    getItem("Donation History", "/financial", <ManageHistoryIcon style={{ fontSize: 20 }}/> ),
-    getItem("Job Portal", "/jobList", <WorkIcon style={{ fontSize: 20 }}/>),
-    getItem("Events", "/allEvent", <EmojiEventsIcon style={{ fontSize: 20 }}/>),
-  ];
-
+  const [collapsed, setCollapsed] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const menuItems = [
+    {
+      label: 'Dashboard',
+      path: '/dashboard',
+      icon: <LayoutDashboardIcon size={20} />,
+    },
+    {
+      label: 'Advertisement',
+      path: '/showAds',
+      icon: <HeartHandshakeIcon size={20} />,
+    },
+    {
+      label: 'Donation History',
+      path: '/financial',
+      icon: <HistoryIcon size={20} />,
+    },
+    {
+      label: 'Job Portal',
+      path: '/jobList',
+      icon: <BriefcaseIcon size={20} />,
+    },
+    {
+      label: 'Events',
+      path: '/allEvent',
+      icon: <TrophyIcon size={20} />,
+    },
+  ]
   return (
-    <>
-      <Header_bar />
-      <Layout>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      <div className="flex">
+        {/* Sidebar */}
+        <div
+          className={`${collapsed ? 'w-20' : 'w-64'} bg-blue-900 min-h-screen transition-all duration-300`}
         >
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={location.pathname}
-            mode="inline"
-            items={items}
-          />
-        </Sider>
-        <Layout className="site-layout">
-          <Content>{children}</Content>
-          <Footer style={{ textAlign: "center" }}>
-            EmpowerHub ©2025
-          </Footer>
-        </Layout>
-      </Layout>
-    </>
-  );
-};
-
-export default AdminLayout;
+          <div className="flex justify-end p-4">
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="text-white hover:text-blue-200 transition-colors duration-200"
+            >
+              {collapsed ? (
+                <ChevronRightIcon size={20} />
+              ) : (
+                <ChevronLeftIcon size={20} />
+              )}
+            </button>
+          </div>
+          <nav className="mt-5">
+            {menuItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className={`w-full flex items-center px-6 py-3 text-white hover:bg-blue-800 transition-colors duration-200 ${location.pathname === item.path ? 'bg-blue-800' : ''}`}
+              >
+                {item.icon}
+                {!collapsed && (
+                  <span className="ml-3 transition-opacity duration-200">
+                    {item.label}
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
+        </div>
+        {/* Main Content */}
+        <div className="flex-1 p-8">{children}</div>
+      </div>
+    </div>
+  )
+}
+export default AdminLayout
