@@ -1,205 +1,121 @@
 import React, { useState } from "react";
 import axios from "axios";
-import WrapperCard from "../../common/Wrapper_card";
 import {
     Button,
     DatePicker,
     Form,
     Input,
     Modal,
+    Row,
+    Col,
+    Typography,
+    Card
 } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import CustomRow from "../../common/Form_header";
-import '../Event-Main.css'
 import dayjs from 'dayjs';
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
+const { Title } = Typography;
+const dateFormat = 'YYYY-MM-DD';
+
 const AddEvent = () => {
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const [eventNo, seteventNo] = useState("");
-    const [eventName, seteventName] = useState("");
-    const [eventPlace, seteventPlace] = useState("");
-    const [eventDetails, seteventDetails] = useState("");
-    const [eventDate, seteventDate] = useState("");
+    const handleSubmit = async (values) => {
+        const { eventNo, eventName, eventPlace, eventDate, eventDetails } = values;
+        const EventSchema = { eventNo, eventName, eventPlace, eventDate, eventDetails };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // get the form data from state or refs
-        const EventSchema = {
-            eventNo,
-            eventName,
-            eventPlace,
-            eventDetails,
-            eventDate,
-        };
-        // show a confirmation dialog
         Modal.confirm({
-            title: 'Do you want to add this event?',
+            title: 'Confirm Event Addition',
             icon: <ExclamationCircleFilled />,
-            content: 'When clicked the OK button, this details will be added to the list.',
+            content: 'Are you sure you want to add this event?',
             async onOk() {
-                // send the data to the backend API
-                return await new Promise((resolve, reject) => {
-                    setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-                    axios
-                        .post("http://localhost:4000/event/addevent", EventSchema)
-                        .then(() => {
-                            window.location.reload(false);
-                        })
-                        .catch((err) => {
-                            alert(err);
-                            console.log(EventSchema)
-                        });
-                })
+                try {
+                    await axios.post("http://localhost:4000/event/addevent", EventSchema);
+                    window.location.reload(false);
+                } catch (err) {
+                    alert("Error adding event!");
+                    console.log(err);
+                }
             },
             onCancel() {
-                // handle cancel action
-                console.log("Cancel");
+                console.log("Cancelled");
             }
         });
     };
 
-    const onFinish = (values) => {
-        console.log(values);
-    };
-
-    const onChange = (eventDate, dateString) => {
-        seteventDate(dateString);
-    };
-
-    const layout = {
-        labelCol: {
-            span: 8,
-
-        },
-        wrapperCol: {
-            span: 90,
-        },
-    };
-
-    const dateFormat = 'YYYY-MM-DD'
-
     return (
-        <div className="main-container">
-
-            <div className="sub-container">
-
-                <WrapperCard style={{ backgroundColor: "#37475E" }}>
-                    <CustomRow style={{ justifyContent: "space-between", padding: "16px" }} >
-                        <h1 style={{ color: "White" }}>Add  a event</h1>
-                    </CustomRow>
-                </WrapperCard>
-                <div className="form">
-                    <Form
-                        {...layout}
-                        name="nest-messages"
-                        onFinish={onFinish}
-                        onSubmitCapture={handleSubmit}
-                        style={{
-                            maxWidth: 700,
-                        }}
-                        labelAlign="left"
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '20px', backgroundColor: '#f4f6f9', minHeight: '100vh' }}>
+            <Card style={{ maxWidth: 700, width: '100%', padding: '24px', boxShadow: '0px 4px 10px rgba(0,0,0,0.1)' }}>
+                <CustomRow style={{ justifyContent: "center", marginBottom: "20px" }}>
+                    <Title level={2} style={{ color: "#37475E", fontSize: "28px", fontWeight: "bold", textAlign: "center", marginBottom: "20px", paddingBottom: "10px", borderBottom: "3px solid #37475E", display: "inline-block" }}>
+                        Add Event
+                    </Title>
+                </CustomRow>
+                <Form 
+                    name="add-event" 
+                    onFinish={handleSubmit} 
+                    layout="vertical"
+                    style={{ maxWidth: '700px', margin: '0 auto', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}
+                >
+                    <Form.Item 
+                        name="eventNo" 
+                        label="Event No" 
+                        rules={[{ required: true, message: 'Event No is required!' }]} 
                     >
-
-                        <Form.Item
-                            name="eventNo"
-                            label="Event No"
-                            rules={[
-                                { required: true, message: '${label} is required!' },
-                            ]}
-                        >
-                            <Input onChange={(e) => {
-                                seteventNo(e.target.value);
-                            }} />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="eventName"
-                            label="Event Name"
-                            rules={[
-                                { required: true, message: '${label} is required!' },
-                            ]}
-                            style={{ paddingTop: "5%" }}
-                        >
-                            <Input onChange={(e) => {
-                                seteventName(e.target.value)
-                            }} />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="eventPlace"
-                            label="Event Location"
-                            rules={[
-                                { required: true, message: '${label} is required!' },
-                            ]}
-                            style={{ paddingTop: "5%" }}
-                        >
-                            <Input onChange={(e) => {
-                                seteventPlace(e.target.value)
-                            }} />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="eventDate"
-                            label="Event Date"
-                            rules={[
-                                { required: true, message: '${label} is required!' },
-                            ]}
-                            style={{ paddingTop: "5%" }}
-                        >
-                            <DatePicker format={dateFormat}
-                                onChange={onChange} />
-
-                        </Form.Item>
-
-                        {/* <Form.Item name={['user', 'website']} label="Website"><Input /></Form.Item> */}
-
-                        <Form.Item
-
-                            name="eventDetails"
-                            label="Event Description"
-                            rules={[
-                                { required: true, message: '${label} is required!' },
-                            ]}
-                            style={{ paddingTop: "5%" }}
-                        >
-                            <Input.TextArea onChange={(e) => {
-                                seteventDetails(e.target.value)
-                            }} />
-                        </Form.Item>
-
-                        <Form.Item
-                            wrapperCol={{
-                                ...layout.wrapperCol,
-                                offset: 10,
-                            }}
-                        >
-                            <section className="btn-controller">
-                                <Button htmlType="submit" className="add-btn btn">
-                                    submit
+                        <Input placeholder="Enter Event No" />
+                    </Form.Item>
+                    
+                    <Form.Item 
+                        name="eventName" 
+                        label="Event Name" 
+                        rules={[{ required: true, message: 'Event Name is required!' }]} 
+                    >
+                        <Input placeholder="Enter Event Name" />
+                    </Form.Item>
+                    
+                    <Form.Item 
+                        name="eventPlace" 
+                        label="Event Location" 
+                        rules={[{ required: true, message: 'Event Location is required!' }]} 
+                    >
+                        <Input placeholder="Enter Event Location" />
+                    </Form.Item>
+                    
+                    <Form.Item 
+                        name="eventDate" 
+                        label="Event Date" 
+                        rules={[{ required: true, message: 'Event Date is required!' }]} 
+                    >
+                        <DatePicker format={dateFormat} style={{ width: '100%' }} />
+                    </Form.Item>
+                    
+                    <Form.Item 
+                        name="eventDetails" 
+                        label="Event Description" 
+                        rules={[{ required: true, message: 'Event Description is required!' }]} 
+                    >
+                        <Input.TextArea rows={4} placeholder="Enter Event Description" />
+                    </Form.Item>
+                    
+                    <Form.Item style={{ marginTop: '20px' }}>
+                        <Row gutter={10} justify="center">
+                            <Col>
+                                <Button type="primary" htmlType="submit" style={{ width: '120px' }}>
+                                    Submit
                                 </Button>
-
-                                <Button htmlType="reset" className="reset-btn btn">
+                            </Col>
+                            <Col>
+                                <Button htmlType="reset" style={{ width: '120px', backgroundColor: '#f0f0f0', color: '#37475E' }}>
                                     Reset
                                 </Button>
-                            </section>
-                        </Form.Item>
-
-                        {/* <Form.Item
-                            wrapperCol={{
-                                ...layout.wrapperCol,
-                                offset: 18,
-                            }}
-                        >
-                            <Button type="primary" htmlType="reset" className="add-btn">
-                                Reset
-                            </Button>
-                        </Form.Item> */}
-
-                    </Form>
-                </div>
-            </div>
+                            </Col>
+                        </Row>
+                    </Form.Item>
+                </Form>
+            </Card>
         </div>
     );
 };
