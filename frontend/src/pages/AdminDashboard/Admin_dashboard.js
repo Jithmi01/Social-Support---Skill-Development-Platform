@@ -58,6 +58,7 @@ function Admin() {
 
     return (
         <div className="dashboard" style={{ backgroundSize: "cover", backgroundPosition: "center" }}>
+            
             <div style={{ paddingLeft: 50, paddingRight: 50 }}>
                 <div className="layout-content" style={{ padding: "16px" }}>
                     <Row gutter={[24, 0]}>
