@@ -2,6 +2,7 @@ import React from 'react'
 import { LogOut, LogOutIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/EmpowerHub.png'
+import { HeartIcon } from 'lucide-react';
 const Header = () => {
   const navigate = useNavigate()
   const handleLogout = () => {
@@ -14,7 +15,7 @@ const Header = () => {
           <div className="flex items-center">
             {/* Replace with your actual logo */}
             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-              <span className="text-blue-900 font-bold text-xl">< img src={logo}/></span>
+            <HeartIcon className="h-6 w-6 text-purple-600" />
             </div>
             <span className="ml-3 text-white text-xl font-semibold">
               EmpowerHub
