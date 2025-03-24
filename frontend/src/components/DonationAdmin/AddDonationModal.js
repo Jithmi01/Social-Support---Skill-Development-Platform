@@ -59,6 +59,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
             footer={null}
         >
             <div className="modal-container">
+                
             <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">
             Publish Donation Advertisement
@@ -76,7 +77,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
                     layout='vertical'
                     onFinish={handleSubmit}
                     style={{ padding: 24, backgroundColor: '#f0f8ff' }}
-                    requiredMark={false} // Removes the asterisk
+                    requiredMark={false} 
                 >
                     <Row gutter={16}>
                         <Col span={12}>
