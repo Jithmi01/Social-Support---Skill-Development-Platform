@@ -137,10 +137,8 @@ const JobPost = (props) => {
               label={<span style={{ fontWeight: "bold", fontSize: "18px" }}>Job Title</span>}
               initialValue={selectedItem?.jobTitle}
               rules={[
-                {
-                  required: true,
-                  message: "Enter Job Title",
-                },
+                { required: true, message: "Enter Job Title" },
+                { pattern: /^[A-Za-z\s]+$/, message: "Job Title should only contain letters" },
               ]}
             >
               <Input
@@ -151,17 +149,20 @@ const JobPost = (props) => {
               />
             </Form.Item>
             <Col span={3} />
-            <Form.Item name="openingDate" label={<span style={{ fontWeight: "bold", fontSize: "18px" }}>Opening Date</span>} {...config}>
-              <DatePicker
-                defaultValue={
-                  selectedItem
-                    ? dayjs(selectedItem.openingDate, dateFormat)
-                    : null
-                }
-                onChange={onChangeOP}
-                style={{ fontSize: "16px" }} 
-              />
-            </Form.Item>
+            <Form.Item 
+  name="openingDate" 
+  label={<span style={{ fontWeight: "bold", fontSize: "18px" }}>Opening Date</span>} 
+  {...config}
+>
+  <DatePicker
+    defaultValue={
+      selectedItem ? dayjs(selectedItem.openingDate, dateFormat) : null
+    }
+    onChange={onChangeOP}
+    style={{ fontSize: "16px" }}
+    disabledDate={(current) => current && current < dayjs().startOf("day")}
+  />
+</Form.Item>
           </Row>
           <br></br>
 
@@ -187,17 +188,20 @@ const JobPost = (props) => {
             <br></br>
             <Col span={3} />
 
-            <Form.Item name="closingDate" label={<span style={{ fontWeight: "bold", fontSize: "18px" }}>Closing Date</span>} {...config}>
-              <DatePicker
-                defaultValue={
-                  selectedItem
-                    ? dayjs(selectedItem.closingDate, dateFormat)
-                    : null
-                }
-                onChange={onChangeCD}
-                style={{ fontSize: "16px" }} 
-              />
-            </Form.Item>
+            <Form.Item 
+  name="closingDate" 
+  label={<span style={{ fontWeight: "bold", fontSize: "18px" }}>Closing Date</span>} 
+  {...config}
+>
+  <DatePicker
+    defaultValue={
+      selectedItem ? dayjs(selectedItem.closingDate, dateFormat) : null
+    }
+    onChange={onChangeCD}
+    style={{ fontSize: "16px" }}
+    disabledDate={(current) => current && current < dayjs().startOf("day")}
+  />
+</Form.Item>
           </Row>
           <br></br>
 
