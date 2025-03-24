@@ -56,9 +56,9 @@ const PublishAd = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
             footer={null}
         >
             <div className="modal-container">
-                <WrapperCard style={{ backgroundColor: '#0D1A45', height: '50px', paddingTop: '10px', borderRadius: 6, marginTop: '15px' }}>
+                <WrapperCard style={{ backgroundColor: '#1E40AF', height: '50px', paddingTop: '10px', borderRadius: 6, marginTop: '15px' }}>
                     <CustomRow style={{ justifyContent: 'center' }}>
-                        <h2 style={{ color: 'white', margin: 0, fontSize: '24px' }}>Publish Donation Advertisements</h2>
+                        <h2 style={{ color: 'white', margin: 0, fontSize: '24px' }}>Publish Donation Advertisement</h2>
                     </CustomRow>
                 </WrapperCard>
 

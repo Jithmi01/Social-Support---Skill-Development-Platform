@@ -1,6 +1,9 @@
 import { Button, Col, Form, Input, Modal, Row, notification } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import {
+    XIcon,
+  } from 'lucide-react'
 import CustomRow from '../common/Form_header';
 import WrapperCard from '../common/Wrapper_card';
 
@@ -51,16 +54,22 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
     return (
         <Modal
             open={isOpen}
-            onCancel={handleCancel}
+            // onCancel={handleCancel}
             width={700}
             footer={null}
         >
             <div className="modal-container">
-                <WrapperCard style={{ backgroundColor: '#0D1A45', height: '50px', paddingTop: '10px', borderRadius: 6, marginTop: '15px' }}>
-                    <CustomRow style={{ justifyContent: 'center' }}>
-                        <h2 style={{ color: 'white', margin: 0, fontSize: '24px' }}>Publish Donation Advertisements</h2>
-                    </CustomRow>
-                </WrapperCard>
+            <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-white">
+            Publish Donation Advertisement
+          </h2>
+          <button
+            onClick={handleCancel}
+            className="text-white hover:text-blue-200 transition-colors"
+          >
+            <XIcon size={20} />
+          </button>
+        </div>
 
                 <Form
                     form={form}
