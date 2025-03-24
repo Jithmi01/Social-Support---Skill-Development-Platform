@@ -19,6 +19,8 @@ import DisplayEvent from "./components/Event/User/DisplayEvent";
 import EditDonations from "./components/DoDonations/EditDonations";
 import JobPost from "./components/JobPortal/JobPost";
 import JobList from "./components/JobPortal/JobList";
+import CoursesContainer from "./components/courses/CoursesContainer";
+import UserCoursesContainer from "./components/user-course/UserCoursesContainer";
 import AppliedUsers from "./components/JobPortal/AppliedUsers";
 import AllParticipants from "./components/Event/Admin/AllParticipants ";
 import CardDetails from "./components/DoDonations/CardDetails";
@@ -100,6 +102,14 @@ function App() {
         }
       />
       <Route
+        path="/courses"
+        element={
+          <AdminLayout>
+            <CoursesContainer />
+          </AdminLayout>
+        }
+      />
+      <Route
         path="/appliedUsers/:id"
         element={
           <PrivateRoute>
@@ -117,6 +127,14 @@ function App() {
               <Showvacancies />
             </UserLayout>
           </PrivateRoute>
+        }
+      />
+      <Route
+        path="/user-courses"
+        element={
+          <UserLayout>
+            <UserCoursesContainer />
+          </UserLayout>
         }
       />
       <Route

@@ -10,7 +10,8 @@ const cors = require('cors');
 
 
 
-//routes
+//
+const courseRoutes = require("./routes/course_routes");
 const FinancialRoute = require('./routes/financial_routes');
 const JobHireRoute = require('./routes/jobHire_routes')
 const JobFindRoute = require('./routes/jobFind_routes');
@@ -74,7 +75,7 @@ app.get('/read-cookies', (req, res) => {
 
 // // app.use(errorHandler);
 
-
+app.use("/courses", courseRoutes);
 app.use('/financial', FinancialRoute);
 app.use('/jobHire', JobHireRoute);
 app.use('/jobFind', JobFindRoute);

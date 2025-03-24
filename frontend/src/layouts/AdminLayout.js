@@ -40,6 +40,11 @@ const AdminLayout = ({ children }) => {
       path: '/allEvent',
       icon: <TrophyIcon size={20} />,
     },
+    {
+      label: 'Courses',
+      path: '/courses',
+      icon: <TrophyIcon size={20} />,
+    },
   ]
   return (
     <div className="min-h-screen bg-gray-100">

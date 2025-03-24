@@ -35,6 +35,7 @@ const UserLayout = ({ children }) => {
     getItem("Job Portal", "/showVacancies", <WorkIcon style={{ fontSize: 20 }}/>),
     getItem("Applied Jobs", "/appliedJobs", <WorkHistoryIcon style={{ fontSize: 20 }}/>),
     getItem("Events", "/userEvent", <EmojiEventsIcon style={{ fontSize: 20 }}/>),
+    getItem("Courses", "/user-courses", <PersonIcon style={{ fontSize: 20 }}/> ),
   ];
 
   return (
