@@ -33,9 +33,18 @@ import AdminLayout from "./layouts/AdminLayout";
 import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 
-function App() {
-  // const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
+// Function to check if the user is authenticated
+const isAuthenticated = () => {
+  return localStorage.getItem("token") ? true : false;
+};
 
+// Protected Route Component
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" />;
+};
+
+function App() {
+  // Axios Interceptor for adding Authorization headers
   axios.interceptors.request.use(
     function (config) {
       if (localStorage.getItem("token"))
@@ -43,156 +52,236 @@ function App() {
       return config;
     },
     function (error) {
-      // Do something with request error
       return Promise.reject(error);
     }
   );
 
   return (
     <Routes>
+      {/* Public Routes */}
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+
+      {/* Private Routes */}
       <Route
         path="/dashboard"
         element={
-          <AdminLayout>
-            <Admin />
-          </AdminLayout>
+          <PrivateRoute>
+            <AdminLayout>
+              <Admin />
+            </AdminLayout>
+          </PrivateRoute>
         }
       />
-      <Route path="/register" element={<Register />} />
       <Route
         path="/userDash"
         element={
-          <HomePage/>
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
         }
       />
-
-      {}
-      <Route path="/add" element={<JobPost />} />
+      <Route
+        path="/add"
+        element={
+          <PrivateRoute>
+            <JobPost />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/joblist"
         element={
-          <AdminLayout>
-            <JobList />
-          </AdminLayout>
+          <PrivateRoute>
+            <AdminLayout>
+              <JobList />
+            </AdminLayout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/appliedUsers/:id"
         element={
-          <AdminLayout>
-            <AppliedUsers />
-          </AdminLayout>
+          <PrivateRoute>
+            <AdminLayout>
+              <AppliedUsers />
+            </AdminLayout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/showVacancies"
         element={
-          <UserLayout>
-            <Showvacancies />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <Showvacancies />
+            </UserLayout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/jobApply/:id"
         element={
-          <UserLayout>
-            <JobApply />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <JobApply />
+            </UserLayout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/appliedjobs"
         element={
-          <UserLayout>
-            <AppliedJobs />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <AppliedJobs />
+            </UserLayout>
+          </PrivateRoute>
         }
       />
-      {}
-      
-      {}
-      <Route path="/pdonation" element={<PublishAd />} />{" "}
-      {/*Ad creation form(not being used)*/}
+      <Route
+        path="/pdonation"
+        element={
+          <PrivateRoute>
+            <PublishAd />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/showAds"
         element={
-          <AdminLayout>
-            <Ads />
-          </AdminLayout>
+          <PrivateRoute>
+            <AdminLayout>
+              <Ads />
+            </AdminLayout>
+          </PrivateRoute>
         }
-      />{" "}
-      {/*Ad display*/}
-
-      <Route path="/update-ad/:_id" element={<UpdateAd />} />
-
-
+      />
+      <Route
+        path="/update-ad/:_id"
+        element={
+          <PrivateRoute>
+            <UpdateAd />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/donate"
         element={
-          <UserLayout>
-            <MakeDonations />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <MakeDonations />
+            </UserLayout>
+          </PrivateRoute>
         }
-      />{" "}
-      {/*Donating form*/}
+      />
       <Route
         path="/showDonation"
         element={
-          <UserLayout>
-            <ShowDonations />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <ShowDonations />
+            </UserLayout>
+          </PrivateRoute>
         }
       />
-      {/*Donation display*/}
-      <Route path="/editDonation/:id" element={<EditDonations />} />{" "}
-      {/*Donation editing*/}
-      <Route path="/cardDetails/" element={<CardDetails />} />{" "}
-      {/*Card Detail Page*/}
-      
-      <Route path="/paymentDetails/" element={<PaymentPortal />} />{" "}
-      {/*Card Detail Page*/}
+      <Route
+        path="/editDonation/:id"
+        element={
+          <PrivateRoute>
+            <EditDonations />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/cardDetails/"
+        element={
+          <PrivateRoute>
+            <CardDetails />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/paymentDetails/"
+        element={
+          <PrivateRoute>
+            <PaymentPortal />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/adsUserView/"
         element={
-          <UserLayout>
-            <AdsUserView />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <AdsUserView />
+            </UserLayout>
+          </PrivateRoute>
         }
       />
-      {}
-      <Route path="/addevent" element={<AddEvent />} />
+      <Route
+        path="/addevent"
+        element={
+          <PrivateRoute>
+            <AddEvent />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/financial"
         element={
-          <AdminLayout>
-            <Financial />
-          </AdminLayout>
+          <PrivateRoute>
+            <AdminLayout>
+              <Financial />
+            </AdminLayout>
+          </PrivateRoute>
         }
       />
       <Route
         path="/allEvent"
         element={
-          <AdminLayout>
-            <AllEvent />
-          </AdminLayout>
+          <PrivateRoute>
+            <AdminLayout>
+              <AllEvent />
+            </AdminLayout>
+          </PrivateRoute>
         }
       />
-      <Route path="/updateEvent/:id" element={<UpdateEvent />} />
-      <Route path="/printDetails/:id" element={<DetailsPrint />} />
+      <Route
+        path="/updateEvent/:id"
+        element={
+          <PrivateRoute>
+            <UpdateEvent />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/printDetails/:id"
+        element={
+          <PrivateRoute>
+            <DetailsPrint />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/userEvent"
         element={
-          <UserLayout>
-            <DisplayEvent />
-          </UserLayout>
+          <PrivateRoute>
+            <UserLayout>
+              <DisplayEvent />
+            </UserLayout>
+          </PrivateRoute>
         }
       />
-      <Route path="/AllParticipants/:id" element={<AllParticipants />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Navigate to={"/userDash"} />} />
-
-
-      
+      <Route
+        path="/AllParticipants/:id"
+        element={
+          <PrivateRoute>
+            <AllParticipants />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/" element={<Navigate to={isAuthenticated() ? "/userDash" : "/login"} />} />
     </Routes>
   );
 }
