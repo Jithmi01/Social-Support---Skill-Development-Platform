@@ -76,7 +76,13 @@ const JobApply = () => {
           <Form.Item
             name="firstName"
             label={<span style={{ fontWeight: "bold", fontSize: "16px" }}>First Name</span>}
-            rules={[{ required: true, message: "Enter Your First Name" }]}
+            rules={[
+              { required: true, message: "Enter Your First Name" },
+              {
+                pattern: /^[A-Za-z]+$/,
+                message: "Enter a valid name (letters only)",
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -84,7 +90,13 @@ const JobApply = () => {
           <Form.Item
             name="lastName"
             label={<span style={{ fontWeight: "bold", fontSize: "16px" }}>Last Name</span>}
-            rules={[{ required: true, message: "Enter Your Last Name" }]}
+            rules={[
+              { required: true, message: "Enter Your Last Name" },
+              {
+                pattern: /^[A-Za-z]+$/,
+                message: "Enter a valid name (letters only)",
+              },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -92,7 +104,7 @@ const JobApply = () => {
           <Form.Item
             name="email"
             label={<span style={{ fontWeight: "bold", fontSize: "16px" }}>Email</span>}
-            rules={[{ required: true, type: "email", message: "Enter Email" }]}
+            rules={[{ required: true, type: "email", message: "Enter a valid Email" }]}
           >
             <Input />
           </Form.Item>
@@ -102,18 +114,36 @@ const JobApply = () => {
             label={<span style={{ fontWeight: "bold", fontSize: "16px" }}>Contact Number</span>}
             rules={[
               { required: true, message: "Enter Your Contact Number" },
-              { pattern: /^0\d{9}$/, message: "Enter a valid 10-digit phone number starting with 0" },
+              { 
+                pattern: /^(0\d{9}|\+94\d{9})$/, 
+                message: "Enter a valid contact number (07XXXXXXXX or +947XXXXXXXX)" 
+              },
             ]}
           >
-            <Input type="tel" placeholder="07XXXXXXXX" />
+            <Input type="tel" placeholder="07XXXXXXXX or +947XXXXXXXX" />
           </Form.Item>
 
           <Form.Item
             name="pastExp"
             label={<span style={{ fontWeight: "bold", fontSize: "16px" }}>Past Experience</span>}
-            rules={[{ required: true, message: "Enter Your Past Experience" }]}
+            rules={[
+              { required: true, message: "Enter Your Past Experience" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || value.length <= 200) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("Limit your description to 200 characters"));
+                },
+              }),
+            ]}
           >
-            <TextArea rows={4} placeholder="Describe your past job experience..." />
+            <TextArea 
+              rows={4} 
+              maxLength={200} 
+              placeholder="Describe your past job experience (max 200 characters)..." 
+              showCount
+            />
           </Form.Item>
 
          
