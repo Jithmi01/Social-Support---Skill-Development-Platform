@@ -1,43 +1,57 @@
 import React, { useEffect, useState } from 'react'
 import { BriefcaseIcon, HeartHandshakeIcon, TrophyIcon } from 'lucide-react'
 import axios from 'axios'
+
+const url1 = "http://localhost:4000/event/getAll";
+
 const Dashboard = () => {
   const [donations, setDonations] = useState([])
   const [jobs, setJobs] = useState([])
   const [events, setEvents] = useState([])
+
   useEffect(() => {
-    // Fetch data
-    axios
-      .get('http://localhost:4000/donation/')
+    axios.get("http://localhost:4000/adDonations/")
       .then((res) => setDonations(res.data))
       .catch((err) => console.error(err))
-    // Simulated job and event data
-    setJobs([1, 2, 3, 4, 5]) // Replace with actual API call
-    setEvents([1, 2, 3]) // Replace with actual API call
+
+      axios.get("http://localhost:4000/jobHire/")
+      .then((res) => setJobs(res.data))
+      .catch((err) => console.error(err))
+
+    axios
+      .get(url1)
+      .then((res) => setEvents(res.data.Event))
+      .catch((err) => console.error(err))
   }, [])
+
+  const totalDonations = donations.length
+  const totalJobs = jobs.length
+  const totalEvents = events.length
+
   const stats = [
     {
       title: 'Total Job Posted',
-      value: jobs.length,
+      value: totalJobs,
       icon: <BriefcaseIcon size={40} />,
       color: 'bg-blue-900',
-      progress: (jobs.length / 10) * 100,
+      progress: (totalJobs / 10) * 100,
     },
     {
       title: 'Total Donations',
-      value: donations.length,
+      value: totalDonations,
       icon: <HeartHandshakeIcon size={40} />,
       color: 'bg-purple-700',
-      progress: (donations.length / 10) * 100,
+      progress: (totalDonations / 10) * 100,
     },
     {
       title: 'Total Events',
-      value: events.length,
+      value: totalEvents,
       icon: <TrophyIcon size={40} />,
       color: 'bg-green-700',
-      progress: (events.length / 10) * 100,
+      progress: (totalEvents / 10) * 100,
     },
   ]
+
   return (
     <div className="space-y-8">
       {/* Stats Cards */}
@@ -57,6 +71,7 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+
       {/* Progress Section */}
       <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
         <h2 className="text-2xl font-bold text-gray-800">Details Bar</h2>
@@ -80,4 +95,5 @@ const Dashboard = () => {
     </div>
   )
 }
+
 export default Dashboard

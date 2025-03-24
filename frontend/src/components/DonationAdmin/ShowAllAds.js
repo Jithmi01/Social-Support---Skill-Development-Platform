@@ -15,6 +15,7 @@ const Ads = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [selectedDonation, setSelectedDonation] = useState(null)
   const navigate = useNavigate()
+  
   useEffect(() => {
     getDonations()
   }, [])
