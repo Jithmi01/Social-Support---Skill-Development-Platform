@@ -30,7 +30,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
         try {
             if (selectedItem) {
                 await axios.put(`http://localhost:4000/adDonations/${selectedItem._id}`, values);
-                notification.success({ message: 'Update Successful', description: 'Your Advertisement Updated Successfully.' });
+                notification.success({ message: 'Update Successful', description: 'Your Advertisement Updated uccessfully.' });
             } else {
                 await axios.post('http://localhost:4000/adDonations/create', values);
                 notification.success({ message: 'Creation Successful', description: 'Your Advertisement Posted Successfully.' });

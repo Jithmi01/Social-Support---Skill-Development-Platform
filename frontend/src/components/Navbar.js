@@ -3,22 +3,22 @@ import Logout from './User/Logout';
 
 const Navbar = () => {
   return <header className="bg-white shadow-sm sticky top-0 z-10">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="container mx-auto px-5 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <HeartIcon className="h-6 w-6 text-purple-600" />
+          <HeartIcon className="h-6 w-6 text-blue-900" />
           <span className="text-xl font-bold text-gray-800">EmpowerHub</span>
         </div>
         <nav className="hidden md:flex space-x-8">
-          <a href="/" className="text-gray-600 hover:text-purple-600 transition-colors">Home</a>
-          <a href="/adsUserView" className="text-gray-600 hover:text-purple-600 transition-colors">Donate Now</a>
-          <a href="/showDonation" className="text-gray-600 hover:text-purple-600 transition-colors">My Donation</a>
-          <a href="/showVacancies" className="text-gray-600 hover:text-purple-600 transition-colors">Job Portal</a>
-          <a href="/appliedJobs" className="text-gray-600 hover:text-purple-600 transition-colors">Applied Jobs</a>
-          <a href="/userEvent" className="text-gray-600 hover:text-purple-600 transition-colors">Events</a>
-          <a href="/user-courses" className="text-gray-600 hover:text-purple-600 transition-colors">courses</a>
+          <a href="/" className="text-gray-600 hover:text-blue-800 transition-colors">Home</a>
+          <a href="/adsUserView" className="text-gray-600 hover:text-blue-800 transition-colors">Donate Now</a>
+          <a href="/showDonation" className="text-gray-600 hover:text-blue-800 transition-colors">Donation History</a>
+          <a href="/showVacancies" className="text-gray-600 hover:text-blue-800 transition-colors">Job Portal</a>
+          <a href="/appliedJobs" className="text-gray-600 hover:text-blue-800 transition-colors">Applied Jobs</a>
+          <a href="/userEvent" className="text-gray-600 hover:text-blue-800 transition-colors">Events</a>
+          <a href="/user-courses" className="text-gray-600 hover:blue-800 transition-colors">Courses</a>
 
         </nav>
-        <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md font-medium transition-colors">
+        <button className="bg-blue-700 hover:bg-blue-900 text-white px-4 py-2 rounded-md font-medium transition-colors">
           <Logout />
         </button>
       </div>

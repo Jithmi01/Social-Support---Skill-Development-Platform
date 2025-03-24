@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {notification} from 'antd'
 import { SearchIcon, FileTextIcon, TrashIcon, ArrowUpDownIcon } from 'lucide-react';
 import axios from 'axios';
 import jsPDF from "jspdf";
@@ -9,6 +10,8 @@ const Donations = () => {
   const [donate, setDonate] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  
+
 
   useEffect(() => {
     axios.get('http://localhost:4000/donation/')
@@ -17,12 +20,14 @@ const Donations = () => {
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:4000/donation/${id}`)
-      .then(() => {
-        alert('Donation record removed successfully');
-        setDonate(donate.filter((item) => item._id !== id));
-      })
-      .catch(() => alert('Failed to remove donation'));
+    if (window.confirm('Are you sure you want to delete this donation record?')) {
+      axios.delete(`http://localhost:4000/donation/${id}`)
+        .then(() => {
+                notification.success({ message: 'Delete Successful', description: 'Donation History Deleted Successfully.' });
+          setDonate(donate.filter((item) => item._id !== id));
+        })
+        .catch(() => alert('Failed to remove donation'));
+    }
   };
 
   const handleSort = () => {
@@ -84,7 +89,7 @@ const Donations = () => {
                       <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">{item.name}</td>
                       <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.contact}</td>
-                      <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">${item.amount}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">Rs.{item.amount}</td>
                       <td className="px-6 py-4 border border-gray-300">
                         <span className="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                           {item.status}
