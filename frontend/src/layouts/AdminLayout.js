@@ -8,6 +8,7 @@ import {
   TrophyIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  GraduationCap
 } from 'lucide-react'
 import Header from '../components/common/header_bar';
 const AdminLayout = ({ children }) => {
@@ -43,7 +44,7 @@ const AdminLayout = ({ children }) => {
     {
       label: 'Courses',
       path: '/courses',
-      icon: <TrophyIcon size={20} />,
+      icon: <GraduationCap size={20} />,
     },
   ]
   return (
