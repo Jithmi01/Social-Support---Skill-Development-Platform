@@ -30,10 +30,10 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
         try {
             if (selectedItem) {
                 await axios.put(`http://localhost:4000/adDonations/${selectedItem._id}`, values);
-                notification.success({ message: 'Update Successful', description: 'Ad updated successfully.' });
+                notification.success({ message: 'Update Successful', description: 'Your Advertisement Updated Successfully.' });
             } else {
                 await axios.post('http://localhost:4000/adDonations/create', values);
-                notification.success({ message: 'Creation Successful', description: 'Ad created successfully.' });
+                notification.success({ message: 'Creation Successful', description: 'Your Advertisement Posted Successfully.' });
             }
             form.resetFields();
             handleOk(); // Close modal & refresh data
@@ -83,7 +83,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
                         <Col span={12}>
                             <Form.Item
                                 name="name"
-                                label={<b style={{ fontSize: '16px', fontWeight: 500 }}>Name</b>}
+                                label={<b style={{ fontSize: '16px', fontWeight: 500 }}>Title</b>}
                                 rules={[
                                     { required: true, message: "Enter name" },
                                     { validator: nameValidation },

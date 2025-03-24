@@ -27,36 +27,33 @@ const DonateForm = () => {
   const [contactError, setContactError] = useState('')
   const [nameError, setNameError] = useState('')
   const [emailError, setEmailError] = useState('')
-  const validateName = (value) => {
-    if (/\d/.test(value)) {
-      setNameError('Name cannot contain numbers')
-    } else if (/[^a-zA-Z\s]/.test(value)) {
-      setNameError('Name cannot contain special characters')
-    } else {
-      setNameError('')
-    }
+
+  const handleNameChange = (e) => {
+    const value = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+    setName(value)
+    setNameError(value ? '' : 'Name cannot be empty')
   }
-  const validateContact = (value) => {
-    if (!/^\d{10}$/.test(value)) {
-      setContactError('Enter a valid 10-digit contact number')
-    } else {
-      setContactError('')
+
+  const handleContactChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '')
+    if (value.length <= 10) {
+      setContact(value)
     }
+    setContactError(value.length === 10 ? '' : 'Enter a valid 10-digit contact number')
   }
-  const validateAmount = (value) => {
-    if (!/^\d+$/.test(value)) {
-      setAmountError('Amount must be a valid number')
-    } else {
-      setAmountError('')
-    }
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '')
+    setAmount(value)
+    setAmountError(value ? '' : 'Amount must be a valid number')
   }
-  const validateEmail = (value) => {
-    if (!value.includes('@')) {
-      setEmailError("Email must contain '@'")
-    } else {
-      setEmailError('')
-    }
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value
+    setEmail(value)
+    setEmailError(value.includes('@') ? '' : "Email must contain '@'")
   }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const donateData = {
@@ -72,9 +69,11 @@ const DonateForm = () => {
       .then(() => navigate('/cardDetails'))
       .catch((err) => console.error(`Error: ${err?.response?.data}`))
   }
+
   const handleClose = () => {
     navigate('/')
   }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
@@ -88,102 +87,78 @@ const DonateForm = () => {
                 <XIcon size={20} className="text-gray-500" />
               </button>
             </div>
+
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-white">
               <h2 className="text-2xl font-bold">Complete Your Donation</h2>
               <p className="mt-2 text-blue-100">Supporting: {nameDon}</p>
             </div>
           </div>
+
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                Full Name
-              </label>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Full Name</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <UserIcon size={18} className="text-gray-400" />
                 </div>
-                <input
-                  type="text"
-                  className={`w-full pl-10 pr-3 py-2 border ${nameError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  onChange={(e) => {
-                    setName(e.target.value)
-                    validateName(e.target.value)
-                  }}
-                />
-                {!nameError && name && (
-                  <CheckCircleIcon
-                    size={18}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500"
-                  />
-                )}
+              <input
+                type="text"
+                className={`w-full px-3 py-2 border ${nameError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg pl-10`}
+                value={name}
+                onChange={handleNameChange}
+              />
               </div>
-              {nameError && (
-                <p className="mt-1 text-sm text-red-600">{nameError}</p>
-              )}
+              {nameError && <p className="mt-1 text-sm text-red-600">{nameError}</p>}
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Email
-              </label>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <MailIcon size={18} className="text-gray-400" />
                 </div>
-                <input
-                  type="email"
-                  className={`w-full pl-10 pr-3 py-2 border ${emailError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                    validateEmail(e.target.value)
-                  }}
-                />
+              <input
+                type="email"
+                className={`w-full px-3 py-2 border ${emailError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg pl-10`}
+                value={email}
+                onChange={handleEmailChange}
+              />
               </div>
-              {emailError && (
-                <p className="text-red-500 text-xs mt-1">{emailError}</p>
-              )}
+              {emailError && <p className="mt-1 text-sm text-red-600">{emailError}</p>}
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Contact Number
-              </label>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Contact Number</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <PhoneIcon size={18} className="text-gray-400" />
                 </div>
-                <input
-                  type="text"
-                  className={`w-full pl-10 pr-3 py-2 border ${contactError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  onChange={(e) => {
-                    setContact(e.target.value)
-                    validateContact(e.target.value)
-                  }}
-                />
+              <input
+                type="text"
+                className={`w-full px-3 py-2 border ${contactError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg pl-10`}
+                value={contact}
+                onChange={handleContactChange}
+              />
               </div>
-              {contactError && (
-                <p className="text-red-500 text-xs mt-1">{contactError}</p>
-              )}
+              {contactError && <p className="mt-1 text-sm text-red-600">{contactError}</p>}
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Donation Amount
-              </label>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Donation Amount</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <DollarSignIcon size={18} className="text-gray-400" />
                 </div>
-                <input
-                  type="text"
-                  className={`w-full pl-10 pr-3 py-2 border ${amountError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  onChange={(e) => {
-                    setAmount(e.target.value)
-                    validateAmount(e.target.value)
-                  }}
-                />
+              <input
+                type="text"
+                className={`w-full px-3 py-2 border ${amountError ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg pl-10`}
+                value={amount}
+                onChange={handleAmountChange}
+              />
               </div>
-              {amountError && (
-                <p className="text-red-500 text-xs mt-1">{amountError}</p>
-              )}
+              {amountError && <p className="mt-1 text-sm text-red-600">{amountError}</p>}
             </div>
+
             <div className="mb-6">
               <label className="block text-gray-700 font-bold mb-2">
                 Help Given To
@@ -195,6 +170,7 @@ const DonateForm = () => {
                 disabled
               />
             </div>
+
             <div className="pt-4">
               <button
                 type="submit"
