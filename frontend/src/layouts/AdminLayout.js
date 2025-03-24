@@ -26,7 +26,7 @@ const AdminLayout = ({ children }) => {
       icon: <HeartHandshakeIcon size={20} />,
     },
     {
-      label: 'Donation History',
+      label: 'Financial Overview',
       path: '/financial',
       icon: <HistoryIcon size={20} />,
     },
@@ -38,6 +38,11 @@ const AdminLayout = ({ children }) => {
     {
       label: 'Events',
       path: '/allEvent',
+      icon: <TrophyIcon size={20} />,
+    },
+    {
+      label: 'Courses',
+      path: '/courses',
       icon: <TrophyIcon size={20} />,
     },
   ]

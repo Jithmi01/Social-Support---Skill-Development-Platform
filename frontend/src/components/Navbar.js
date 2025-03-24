@@ -15,6 +15,7 @@ const Navbar = () => {
           <a href="/showVacancies" className="text-gray-600 hover:text-purple-600 transition-colors">Job Portal</a>
           <a href="/appliedJobs" className="text-gray-600 hover:text-purple-600 transition-colors">Applied Jobs</a>
           <a href="/userEvent" className="text-gray-600 hover:text-purple-600 transition-colors">Events</a>
+          <a href="/user-courses" className="text-gray-600 hover:text-purple-600 transition-colors">courses</a>
 
         </nav>
         <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md font-medium transition-colors">

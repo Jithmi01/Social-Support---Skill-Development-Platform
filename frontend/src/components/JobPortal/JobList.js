@@ -196,7 +196,7 @@ const JobList = () => {
 
   return (
     <>
-      <div className="otherdash" style={{ minHeight: "100vh", display: "flex", backgroundColor: "#001f3f" }}>
+      <div className="otherdash" style={{ minHeight: "100vh", display: "flex", backgroundColor: "white" }}>
         <div style={{ paddingLeft: 150 }}>
           <br />
           <br />
