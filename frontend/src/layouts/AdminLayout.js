@@ -26,7 +26,7 @@ const AdminLayout = ({ children }) => {
       icon: <HeartHandshakeIcon size={20} />,
     },
     {
-      label: 'Donation History',
+      label: 'Financial Overview',
       path: '/financial',
       icon: <HistoryIcon size={20} />,
     },
