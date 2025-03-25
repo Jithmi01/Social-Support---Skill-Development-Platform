@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search, FilePlus, FileText, Plus } from 'lucide-react'
 import DonationCard from './DonationCard'
 import AddDonationModal from './AddDonationModal'
+import logo from "../../assets/images/EmpowerHub.png";
 import DeleteConfirmationModal from './DeleteConfirmationModal'
 import jsPDF from 'jspdf'
 
@@ -63,50 +64,65 @@ const Ads = () => {
     }
   }
   const generatePdf = () => {
-    const doc = new jsPDF()
-    doc.setFontSize(20)
-    doc.setTextColor(13, 26, 69) // Dark blue color
-    doc.text('EmpowerHub - Donation Opportunities', 105, 20, {
-      align: 'center',
-    })
-    doc.setFontSize(12)
-    doc.setTextColor(0, 0, 0)
-    doc.text('Skill Development & Learning Platform', 105, 28, {
-      align: 'center',
-    })
-    doc.text('No.40, Kaduwela Road, Malabe', 105, 36, {
-      align: 'center',
-    })
-    doc.text('Tel: +94 77 444 5555 | Email: empowerhub@gmail.com', 105, 44, {
-      align: 'center',
-    })
-    doc.setDrawColor(13, 26, 69)
-    doc.setLineWidth(0.5)
-    doc.line(15, 50, 195, 50)
-    let yPos = 60
-    const lineHeight = 10
-    const colWidth = 45
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Name', 15, yPos)
-    doc.text('Location', 60, yPos)
-    doc.text('Description', 105, yPos)
-    doc.text('Help Required', 150, yPos)
-    yPos += lineHeight
-    doc.setFont('helvetica', 'normal')
-    donations.forEach((item) => {
-      if (yPos > 280) {
-        doc.addPage()
-        yPos = 20
-      }
-      doc.text(item.name?.substring(0, 20) || '', 15, yPos)
-      doc.text(item.location?.substring(0, 20) || '', 60, yPos)
-      doc.text(item.smallDes?.substring(0, 20) || '', 105, yPos)
-      doc.text(item.help?.substring(0, 20) || '', 150, yPos)
-      yPos += lineHeight
-    })
-    doc.save('Donation_Opportunities.pdf')
-  }
+    const doc = new jsPDF();
+  
+    const imgWidth = 20;
+    const imgHeight = 20;
+    const imgX = 10;
+    const imgY = 10;
+  
+    const img = new Image();
+    img.src = logo; // Ensure 'logo' is properly defined in your code
+  
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const imgBase64 = canvas.toDataURL('image/png');
+  
+      // Add logo
+      doc.addImage(imgBase64, 'PNG', imgX, imgY, imgWidth, imgHeight);
+  
+      // Header
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('EmpowerHub - Skill Development & Learning Platform', 105, 20, { align: 'center' });
+  
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text('No.40, Kaduwela Road, Malabe', 105, 28, { align: 'center' });
+      doc.text('Tel: +94 77 444 5555 | Email: empowerhub@gmail.com', 105, 36, { align: 'center' });
+  
+      // Line separator
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(10, 45, 200, 45);
+  
+      // Title
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Donation Opportunities Report', 105, 55, { align: 'center' });
+  
+      // Table
+      doc.autoTable({
+        startY: 65,
+        columns: [
+          { header: 'Name', dataKey: 'name' },
+          { header: 'Location', dataKey: 'location' },
+          { header: 'Description', dataKey: 'smallDes' },
+          { header: 'Help Required', dataKey: 'help' },
+        ],
+        body: donations, // Ensure 'donations' is correctly passed
+        theme: 'grid',
+        styles: { fontSize: 10 },
+      });
+  
+      doc.save('Donation_Opportunities.pdf');
+    };
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-6 px-6 md:px-10">
