@@ -256,7 +256,7 @@ const JobPost = (props) => {
                   }}
                   onClick={handleSubmit}
                 >
-                  {selectedItem ? "Edit" : "Submit"}
+                  {selectedItem ? "Submit" : "Submit"}
                 </Button>
               </a>
             </Form.Item>
