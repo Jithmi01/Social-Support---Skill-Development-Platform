@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Table, Input, Card } from "antd";
+import { Table, Input, Card, Button } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import logoImage from "../../assets/images/EmpowerHub.png";
 
 const Showvacancies = () => {
   const [appliedUsersList, setAppliedUsersList] = useState([]);
@@ -43,7 +46,72 @@ const Showvacancies = () => {
       dataIndex: "contactNum",
       key: "contactNum",
     },
+    {
+      title: "Past Experience",
+      dataIndex: "pastExp",
+      key: "pastExp",
+      render: (text) => {
+        return <div style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{text}</div>;
+      }
+    },
   ];
+
+  // PDF generation
+  const generatePdf = () => {
+    const doc = new jsPDF();
+
+    // Add Logo Image to PDF
+    const imgWidth = 20;
+    const imgHeight = 20;
+    const imgX = 10;
+    const imgY = 10;
+
+    // Adding the logo to PDF
+    doc.addImage(logoImage, "PNG", imgX, imgY, imgWidth, imgHeight);
+
+    // Company Details
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('EmpowerHub - Skill Development & Learning Platform', 105, 20, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('No.40, Kaduwela Road, Malabe', 105, 28, { align: 'center' });
+    doc.text('Tel: +94 77 444 5555 | Email: empowerhub@gmail.com', 105, 36, { align: 'center' });
+
+    // Separator Line
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.line(10, 45, 200, 45);
+
+    // PDF Title
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Applied Users List', 105, 55, { align: 'center' });
+
+    // Table
+    doc.autoTable({
+      startY: 65,
+      columns: [
+        { header: 'First Name', dataKey: 'firstName' },
+        { header: 'Last Name', dataKey: 'lastName' },
+        { header: 'Email', dataKey: 'email' },
+        { header: 'Contact Number', dataKey: 'contactNum' },
+        { header: 'Past Experience', dataKey: 'pastExp' },
+      ],
+      body: appliedUsersList.map((user) => ({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        contactNum: user.contactNum,
+        pastExp: user.pastExp,
+      })),
+      theme: 'grid',
+    });
+
+    // Save PDF
+    doc.save('Applied_Users_Report.pdf');
+  };
 
   return (
     <div
@@ -96,6 +164,17 @@ const Showvacancies = () => {
           />
         </div>
 
+        {/* PDF Download Button */}
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <Button
+            onClick={generatePdf}
+            type="primary"
+            style={{ backgroundColor: "#D84040", borderColor: "#001f3f" }}
+          >
+            Download PDF
+          </Button>
+        </div>
+
         {/* Data Table */}
         <Table
           columns={columns}
@@ -111,4 +190,3 @@ const Showvacancies = () => {
 };
 
 export default Showvacancies;
-
