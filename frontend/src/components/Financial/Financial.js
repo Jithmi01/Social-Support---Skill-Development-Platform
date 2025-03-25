@@ -28,7 +28,7 @@ const Financial = () => {
             <h1 className="text-2xl font-bold text-white">
               Financial Overview
             </h1>
-            <p className="text-blue-100 mt-2">Track your donation history</p>
+            <p className="text-blue-100 mt-2">Track the donation history</p>
           </div>
           <div className="p-6">
             <div className="overflow-x-auto rounded-lg border border-gray-200">
