@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { notification } from 'antd';
 import {
   CreditCardIcon,
   ShieldCheckIcon,
@@ -18,6 +19,7 @@ const CardDetails = () => {
   const [nameError, setNameError] = useState('')
   const [cardNumberError, setCardNumberError] = useState('')
   const [cvcError, setCvcError] = useState('')
+
   const validateName = (value) => {
     if (!value) {
       setNameError('Please enter the cardholder name')
@@ -30,6 +32,7 @@ const CardDetails = () => {
     setNameError('')
     return true
   }
+
   const validateCardNumber = (value) => {
     if (!value) {
       setCardNumberError('Please enter your card number')
@@ -55,15 +58,19 @@ const CardDetails = () => {
     return true
   }
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const isNameValid = validateName(cardholderName)
-    const isCardNumberValid = validateCardNumber(cardNumber)
-    const isCvcValid = validateCVC(cvc)
+    e.preventDefault();
+    const isNameValid = validateName(cardholderName);
+    const isCardNumberValid = validateCardNumber(cardNumber);
+    const isCvcValid = validateCVC(cvc);
+
     if (isNameValid && isCardNumberValid && isCvcValid) {
-      alert('Payment Successful!')
-      navigate('/showdonation')
+        notification.success({ 
+            message: 'Payment Successful', 
+            description: 'Your Payment is Successful.' 
+        });
+        navigate('/showdonation');
     }
-  }
+};
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
@@ -116,6 +123,8 @@ const CardDetails = () => {
                 <p className="mt-1 text-sm text-red-600">{nameError}</p>
               )}
             </div>
+
+            
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
                 Card Number

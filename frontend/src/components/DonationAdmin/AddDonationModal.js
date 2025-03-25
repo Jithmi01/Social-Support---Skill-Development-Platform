@@ -30,10 +30,10 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
         try {
             if (selectedItem) {
                 await axios.put(`http://localhost:4000/adDonations/${selectedItem._id}`, values);
-                notification.success({ message: 'Update Successful', description: 'Ad updated successfully.' });
+                notification.success({ message: 'Update Successful', description: 'Your Advertisement Updated uccessfully.' });
             } else {
                 await axios.post('http://localhost:4000/adDonations/create', values);
-                notification.success({ message: 'Creation Successful', description: 'Ad created successfully.' });
+                notification.success({ message: 'Creation Successful', description: 'Your Advertisement Posted Successfully.' });
             }
             form.resetFields();
             handleOk(); // Close modal & refresh data
@@ -59,6 +59,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
             footer={null}
         >
             <div className="modal-container">
+                
             <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">
             Publish Donation Advertisement
@@ -76,13 +77,13 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
                     layout='vertical'
                     onFinish={handleSubmit}
                     style={{ padding: 24, backgroundColor: '#f0f8ff' }}
-                    requiredMark={false} // Removes the asterisk
+                    requiredMark={false} 
                 >
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 name="name"
-                                label={<b style={{ fontSize: '16px', fontWeight: 500 }}>Name</b>}
+                                label={<b style={{ fontSize: '16px', fontWeight: 500 }}>Title</b>}
                                 rules={[
                                     { required: true, message: "Enter name" },
                                     { validator: nameValidation },
