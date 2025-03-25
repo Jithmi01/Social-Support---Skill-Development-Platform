@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BriefcaseIcon, HeartHandshakeIcon, TrophyIcon } from 'lucide-react'
+import { BriefcaseIcon, HeartHandshakeIcon, TrophyIcon,GraduationCap } from 'lucide-react'
 import axios from 'axios'
 
 const url1 = "http://localhost:4000/event/getAll";
@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [donations, setDonations] = useState([])
   const [jobs, setJobs] = useState([])
   const [events, setEvents] = useState([])
+  const [courses, setCourses] = useState([])
 
   useEffect(() => {
     axios.get("http://localhost:4000/adDonations/")
@@ -16,6 +17,10 @@ const Dashboard = () => {
 
       axios.get("http://localhost:4000/jobHire/")
       .then((res) => setJobs(res.data))
+      .catch((err) => console.error(err))
+
+      axios.get("http://localhost:4000/courses/")
+      .then((res) => setCourses(res.data))
       .catch((err) => console.error(err))
 
     axios
@@ -27,6 +32,7 @@ const Dashboard = () => {
   const totalDonations = donations.length
   const totalJobs = jobs.length
   const totalEvents = events.length
+  const totalCourses = courses.length
 
   const stats = [
     {
@@ -49,6 +55,13 @@ const Dashboard = () => {
       icon: <TrophyIcon size={40} />,
       color: 'bg-green-700',
       progress: (totalEvents / 10) * 100,
+    },
+    {
+      title: 'Total Courses',
+      value: totalCourses,
+      icon: <GraduationCap size={40} />,
+      color: 'bg-red-700',
+      progress: (totalCourses / 10) * 100,
     },
   ]
 
