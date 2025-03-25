@@ -8,9 +8,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { Layout, Menu } from "antd";
-import { Content, Footer } from "antd/es/layout/layout";
+import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const UserLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -56,11 +57,10 @@ const UserLayout = ({ children }) => {
         </Sider> */}
         <Layout className="site-layout">
           <Content>{children}</Content>
-          <Footer style={{ textAlign: "center" }}>
-            EmpowerHub ©2025
-          </Footer>
+          
         </Layout>
       </Layout>
+      <Footer/>
 
       {/* style{
         `
