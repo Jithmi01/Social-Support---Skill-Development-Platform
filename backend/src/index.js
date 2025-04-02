@@ -1,4 +1,3 @@
-
 require('dotenv').config()
 
 
@@ -6,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 
 
@@ -22,6 +22,7 @@ const RegisterUsers = require('./routes/register_routes');
 const Donations = require('./routes/donate_routes');
 const adDonation = require('./routes/adsDonate_routes');
 const authRoutes=require('./routes/auth_routes')
+const campaignRoutes = require('./routes/campaign_routes');
 const cookieParser = require('cookie-parser');
 const { requireAuth } = require('./middleware/auth');
 
@@ -45,7 +46,8 @@ app.use((req, res, next) => {
   next()
 })
 
-
+// Serve uploaded files - update the path to be absolute
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.get('/set-cookies', (req, res) => {
 
@@ -85,6 +87,7 @@ app.use('/regiUser', RegisterUsers);
 app.use('/donation',Donations);
 app.use('/adDonations',adDonation);
 app.use("/auth",authRoutes);
+app.use('/campaigns', campaignRoutes);
 app.use('/',requireAuth);
 
 // connect to db

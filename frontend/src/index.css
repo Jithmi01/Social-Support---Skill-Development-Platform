@@ -1,20 +1,33 @@
-
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Calendar customization */
+.rbc-calendar {
+  background-color: white;
+  border-radius: 0.75rem;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
+.rbc-header {
+  padding: 8px;
+  font-weight: 600;
+  background-color: #f3f4f6;
+}
+
+.rbc-event {
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.event-active {
+  background-color: #34D399 !important;
+}
+
+.event-inactive {
+  background-color: #F87171 !important;
+}
+
+.rbc-today {
+  background-color: #EFF6FF;
+}
 
