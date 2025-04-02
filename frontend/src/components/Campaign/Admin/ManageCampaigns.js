@@ -126,6 +126,14 @@ const ManageCampaigns = () => {
     return 'https://via.placeholder.com/400x300';
   };
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
@@ -268,6 +276,7 @@ const ManageCampaigns = () => {
                     <input
                       type="date"
                       value={formData.date}
+                      min={getCurrentDate()}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                       className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                       required
