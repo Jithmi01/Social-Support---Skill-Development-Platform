@@ -49,9 +49,11 @@ const AdsUserView = () => {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
           {filteredAds.map((ad) => (
             <div key={ad.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
               <div className="p-6">
+
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-1">{ad.name}</h3>
@@ -68,6 +70,7 @@ const AdsUserView = () => {
                   <p className="text-gray-600">{ad.help}</p>
                 </div>
                 <p className="text-gray-500 text-sm mb-6 line-clamp-2">{ad.longDes}</p>
+                
                 <div className="flex space-x-2">
                   <div to={`/donate?name=${encodeURIComponent(ad.name)}`} className="flex-1 flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300">
                     <span className="font-medium">Support This Cause</span>

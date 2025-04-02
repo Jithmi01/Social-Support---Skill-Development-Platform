@@ -76,7 +76,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
                                 label={<b style={{ fontSize: '16px', fontWeight: 500 }}>Location</b>}
                                 rules={[
                                     { required: true, message: "Enter location" },
-                                    { pattern: /^[^0-9]*$/, message: "Numbers are not allowed" },
+                                    // { pattern: /^[^0-9]*$/, message: "Numbers are not allowed" },
                                 ]}
                             >
                                 <Input placeholder="Enter location" onKeyPress={preventNumbers} />
