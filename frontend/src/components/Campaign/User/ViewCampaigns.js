@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 
 const ViewCampaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+
+
+
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -70,9 +74,13 @@ const ViewCampaigns = () => {
                     {new Date(campaign.date).toLocaleDateString()}
                   </span>
                   {campaign.status === 'Active' && (
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <Link 
+                      to="/makeDonation" 
+                      state={{ campaign }} 
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
                       Donate Now
-                    </button>
+                    </Link>
                   )}
                 </div>
               </div>

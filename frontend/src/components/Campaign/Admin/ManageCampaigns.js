@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { PlusIcon, PencilIcon, TrashIcon, HeartHandshakeIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ManageCampaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
@@ -15,6 +16,7 @@ const ManageCampaigns = () => {
   const [editingId, setEditingId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCampaigns();
@@ -139,13 +141,22 @@ const ManageCampaigns = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Manage Campaigns</h1>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
-          >
-            <PlusIcon className="w-5 h-5" />
-            Add Campaign
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate('/admin/donations')}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700"
+            >
+              <HeartHandshakeIcon className="w-5 h-5" />
+              View Donations
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+            >
+              <PlusIcon className="w-5 h-5" />
+              Add Campaign
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
