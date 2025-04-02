@@ -42,6 +42,11 @@ const AdminLayout = ({ children }) => {
       icon: <TrophyIcon size={20} />,
     },
     {
+      label: 'Campaigns',
+      path: '/admin/campaigns',
+      icon: <TrophyIcon size={20} />,
+    },
+    {
       label: 'Courses',
       path: '/courses',
       icon: <GraduationCap size={20} />,

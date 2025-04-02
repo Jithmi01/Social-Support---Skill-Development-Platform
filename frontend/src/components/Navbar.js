@@ -16,6 +16,8 @@ const Navbar = () => {
           <a href="/appliedJobs" className="text-gray-600 hover:text-blue-800 transition-colors">Applied Jobs</a>
           <a href="/userEvent" className="text-gray-600 hover:text-blue-800 transition-colors">Events</a>
           <a href="/user-courses" className="text-gray-600 hover:blue-800 transition-colors">Courses</a>
+          <a href="/campaigns" className="text-gray-600 hover:blue-800 transition-colors">Campaign</a>
+
 
         </nav>
         <button className="bg-blue-700 hover:bg-blue-900 text-white px-4 py-2 rounded-md font-medium transition-colors">
