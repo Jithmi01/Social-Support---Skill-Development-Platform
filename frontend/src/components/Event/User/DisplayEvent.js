@@ -1,7 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Modal, Button, Input, Form } from 'antd'
+import { Modal, Button, Input, Form, Switch } from 'antd'
 import { MapPinIcon, CalendarIcon } from 'lucide-react'
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+
+const locales = {
+  'en-US': require('date-fns/locale/en-US')
+}
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+})
+
 const DisplayEvent = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [eventDetails, setAllEventDetails] = useState([])
@@ -9,6 +28,8 @@ const DisplayEvent = () => {
   const [name, setname] = useState('')
   const [eventId, setEventId] = useState('')
   const [selectedEventId, setSelectedEventId] = useState(null)
+  const [viewMode, setViewMode] = useState('list') // 'list' or 'calendar'
+
   useEffect(() => {
     axios
       .get("http://localhost:4000/event/getAll")
@@ -18,90 +39,141 @@ const DisplayEvent = () => {
       })
       .catch(() => alert("Check The Connectivity"))
   }, [])
+
   const handleSubmit = () => {
     axios
       .post(`http://localhost:4000/event/${eventId}/registered-entities`, { id, name })
       .then(() => window.location.reload(false))
       .catch((err) => alert(err))
   }
+
   const showModal = (eventId) => {
     setSelectedEventId(eventId)
     setEventId(eventId)
     setModalVisible(true)
   }
+
   const handleCancel = () => {
     setModalVisible(false)
   }
+
   const getStatusColor = (status) => {
     return status === 'Active'
       ? 'bg-green-100 text-green-800'
       : 'bg-red-100 text-red-800'
   }
+
+  // Convert events to calendar format
+  const calendarEvents = eventDetails.map(event => ({
+    id: event._id,
+    title: event.eventName,
+    start: new Date(event.eventDate),
+    end: new Date(event.eventDate),
+    location: event.eventPlace,
+    description: event.eventDetails,
+    status: event.eventStatus
+  }))
+
+  const handleEventClick = (event) => {
+    showModal(event.id)
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Upcoming Events</h1>
-          <div className="w-64">
-            <input
-              type="text"
-              placeholder="Search events..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Calendar View</span>
+              <Switch
+                checked={viewMode === 'calendar'}
+                onChange={(checked) => setViewMode(checked ? 'calendar' : 'list')}
+              />
+            </div>
+            <div className="w-64">
+              <input
+                type="text"
+                placeholder="Search events..."
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
           </div>
         </div>
-        <div className="grid gap-6">
-          {eventDetails.map((event) => (
-            <div
-              key={event._id}
-              className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all hover:shadow-md"
-            >
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-bold text-gray-800">
-                    {event.eventName}
-                  </h2>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(event.eventStatus)}`}
-                  >
-                    {event.eventStatus}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center">
-                    <MapPinIcon className="h-5 w-5 text-gray-500 mr-2" />
-                    <span className="text-gray-600">{event.eventPlace}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CalendarIcon className="h-5 w-5 text-gray-500 mr-2" />
-                    <span className="text-gray-600">{event.eventDate}</span>
-                  </div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    Description
-                  </h3>
-                  <p className="text-gray-600">
-                    {event.eventDetails.length > 150
-                      ? event.eventDetails.substring(0, 150) + '...'
-                      : event.eventDetails}
-                  </p>
-                  <div className="mt-3 flex justify-end">
-                    <button
-                      onClick={() => showModal(event._id)}
-                      className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+
+        {viewMode === 'calendar' ? (
+          <div className="bg-white p-6 rounded-xl shadow-sm" style={{ height: '700px' }}>
+            <Calendar
+              localizer={localizer}
+              events={calendarEvents}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: '100%' }}
+              onSelectEvent={handleEventClick}
+              eventPropGetter={(event) => ({
+                className: `event-${event.status.toLowerCase()}`,
+                style: {
+                  backgroundColor: event.status === 'Active' ? '#34D399' : '#F87171',
+                  color: 'white',
+                }
+              })}
+            />
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {eventDetails.map((event) => (
+              <div
+                key={event._id}
+                className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all hover:shadow-md"
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <h2 className="text-xl font-bold text-gray-800">
+                      {event.eventName}
+                    </h2>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(event.eventStatus)}`}
                     >
-                      <div className="h-5 w-5 mr-1" />
-                      <span className="text-sm font-medium">
-                        Read more & participate
-                      </span>
-                    </button>
+                      {event.eventStatus}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="flex items-center">
+                      <MapPinIcon className="h-5 w-5 text-gray-500 mr-2" />
+                      <span className="text-gray-600">{event.eventPlace}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CalendarIcon className="h-5 w-5 text-gray-500 mr-2" />
+                      <span className="text-gray-600">{event.eventDate}</span>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </h3>
+                    <p className="text-gray-600">
+                      {event.eventDetails.length > 150
+                        ? event.eventDetails.substring(0, 150) + '...'
+                        : event.eventDetails}
+                    </p>
+                    <div className="mt-3 flex justify-end">
+                      <button
+                        onClick={() => showModal(event._id)}
+                        className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        <div className="h-5 w-5 mr-1" />
+                        <span className="text-sm font-medium">
+                          Read more & participate
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
         <Modal
           open={modalVisible}
           onCancel={handleCancel}
@@ -159,6 +231,23 @@ const DisplayEvent = () => {
                           required: true,
                           message: 'Please enter your ID',
                         },
+                        {
+                          pattern: /^[0-9]+[0-9A-Za-z]$/,
+                          message: 'ID must contain only numbers with last character being a number or letter',
+                        },
+                        {
+                          validator: (_, value) => {
+                            if (!value) return Promise.resolve();
+                            if (value.length < 2) {
+                              return Promise.reject('ID must be at least 2 characters long');
+                            }
+                            const allButLast = value.slice(0, -1);
+                            if (!/^\d+$/.test(allButLast)) {
+                              return Promise.reject('All characters except the last one must be numbers');
+                            }
+                            return Promise.resolve();
+                          }
+                        }
                       ]}
                       className="mb-6"
                     >
@@ -190,5 +279,4 @@ const DisplayEvent = () => {
   )
 }
 
-
-export default DisplayEvent;
+export default DisplayEvent

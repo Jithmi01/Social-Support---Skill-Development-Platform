@@ -34,6 +34,8 @@ import Financial from "./components/Financial/Financial";
 import AdminLayout from "./layouts/AdminLayout";
 import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
+import ManageCampaigns from "./components/Campaign/Admin/ManageCampaigns";
+import ViewCampaigns from "./components/Campaign/User/ViewCampaigns";
 
 // Function to check if the user is authenticated
 const isAuthenticated = () => {
@@ -297,6 +299,22 @@ function App() {
           <PrivateRoute>
             <AllParticipants />
           </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/campaigns"
+        element={
+          <AdminLayout>
+            <ManageCampaigns />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/campaigns"
+        element={
+          <UserLayout>
+            <ViewCampaigns />
+          </UserLayout>
         }
       />
       <Route path="/" element={<Navigate to={isAuthenticated() ? "/userDash" : "/login"} />} />
