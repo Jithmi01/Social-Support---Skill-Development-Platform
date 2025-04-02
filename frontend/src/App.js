@@ -24,6 +24,7 @@ import UserCoursesContainer from "./components/user-course/UserCoursesContainer"
 import AppliedUsers from "./components/JobPortal/AppliedUsers";
 import AllParticipants from "./components/Event/Admin/AllParticipants ";
 import CardDetails from "./components/DoDonations/CardDetails";
+import Card from "./components/Campaign/User/Card";
 import Login from "./components/User/Login";
 import PaymentPortal from "./components/DoDonations/PaymentPortal";
 import UserLayout from "./layouts/UserLayout";
@@ -36,6 +37,9 @@ import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 import ManageCampaigns from "./components/Campaign/Admin/ManageCampaigns";
 import ViewCampaigns from "./components/Campaign/User/ViewCampaigns";
+import MakeDonation from "./components/Campaign/User/MakeDonation";
+import DonationConfirmation from "./components/Campaign/User/DonationConfirmation";
+import ViewDonations from "./components/Campaign/Admin/ViewDonations";
 
 // Function to check if the user is authenticated
 const isAuthenticated = () => {
@@ -222,6 +226,14 @@ function App() {
         }
       />
       <Route
+        path="/Card/"
+        element={
+          <PrivateRoute>
+            <Card />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/paymentDetails/"
         element={
           <PrivateRoute>
@@ -315,6 +327,30 @@ function App() {
           <UserLayout>
             <ViewCampaigns />
           </UserLayout>
+        }
+      />
+      <Route
+        path="/makeDonation"
+        element={
+          <UserLayout>
+            <MakeDonation />
+          </UserLayout>
+        }
+      />
+      <Route
+        path="/donationConfirmation"
+        element={
+          <UserLayout>
+            <DonationConfirmation />
+          </UserLayout>
+        }
+      />
+      <Route
+        path="/admin/donations"
+        element={
+          <AdminLayout>
+            <ViewDonations />
+          </AdminLayout>
         }
       />
       <Route path="/" element={<Navigate to={isAuthenticated() ? "/userDash" : "/login"} />} />
