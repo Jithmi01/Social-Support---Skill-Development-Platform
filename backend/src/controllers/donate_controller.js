@@ -32,9 +32,11 @@ const getDonationById = async (req, res) => {
 // Make a donation
 const makeDonation = async (req, res) => {
   try {
-    const { donorName, amount, campaignName, status } = req.body;
+    const { donorName, email, contact, amount, campaignName, status } = req.body;
     const donation = await Donation.create({
       donorName,
+      email,
+      contact,
       amount,
       campaignName,
       status
@@ -67,18 +69,27 @@ const updateDonation = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'Unable Transaction' });
+    return res.status(400).json({ error: 'Unable to update' });
   }
 
-  const donation = await Donation.findOneAndUpdate({ _id: id }, {
-    ...req.body
-  });
+  try {
+    const donation = await Donation.findOneAndUpdate(
+      { _id: id },
+      { 
+        ...req.body,
+        updatedAt: new Date()
+      },
+      { new: true, runValidators: true }
+    );
 
-  if (!donation) {
-    return res.status(400).json({ error: 'Unable Transaction' });
+    if (!donation) {
+      return res.status(400).json({ error: 'Unable to update' });
+    }
+
+    res.status(200).json(donation);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-
-  res.status(200).json(donation);
 }
 
 module.exports = {

@@ -72,11 +72,10 @@ const AdsUserView = () => {
                 <p className="text-gray-500 text-sm mb-6 line-clamp-2">{ad.longDes}</p>
                 
                 <div className="flex space-x-2">
-                  <div to={`/donate?name=${encodeURIComponent(ad.name)}`} className="flex-1 flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300">
+                  <Link to={`/donate?name=${encodeURIComponent(ad.name)}`} className="flex-1 flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300">
                     <span className="font-medium">Support This Cause</span>
                     <ChevronRightIcon size={18} className="ml-2" />
-                  </div>
-                  
+                  </Link>
                 </div>
               </div>
             </div>

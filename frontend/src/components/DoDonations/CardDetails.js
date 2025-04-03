@@ -78,8 +78,12 @@ const CardDetails = () => {
     if (isNameValid && isCardNumberValid && isCvcValid) {
       try {
         const donationId = localStorage.getItem('donationId');
+        const donationDetails = JSON.parse(localStorage.getItem('donationDetails'));
+
         await axios.put(`http://localhost:4000/donation/${donationId}`, {
-          status: 'Paid'
+          status: 'Paid',
+          email: donationDetails.email,
+          contact: donationDetails.contact
         });
 
         notification.success({ 

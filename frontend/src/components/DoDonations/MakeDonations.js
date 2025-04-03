@@ -67,11 +67,11 @@ const DonateForm = () => {
     }
 
     const donateData = {
-      donorName: name, // Changed from name to donorName
+      donorName: name,
+      email: email,
+      contact: contact,
       amount: parseInt(amount),
-      campaignName: helpGiven || 'General Donation', // Added campaignName field
-      email,
-      contact,
+      campaignName: helpGiven || 'General Donation',
       status: 'Pending'
     }
 

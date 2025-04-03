@@ -41,13 +41,16 @@ const Donations = () => {
     (item?.email || '').toLowerCase().includes(searchText.toLowerCase()) ||
     (item?.contact || '').toLowerCase().includes(searchText.toLowerCase()) ||
     (item?.amount?.toString() || '').includes(searchText) ||
-    (item?.campaignName || '').toLowerCase().includes(searchText.toLowerCase())
+    (item?.campaignName || '').toLowerCase().includes(searchText.toLowerCase()) ||
+    (item?.status || '').toLowerCase().includes(searchText.toLowerCase())
   ).map(item => ({
     ...item,
+    donorName: item.donorName || 'Anonymous',
     email: item.email || 'N/A',
     contact: item.contact || 'N/A',
     status: item.status || 'Pending',
-    campaignName: item.campaignName || 'General Donation'
+    campaignName: item.campaignName || 'General Donation',
+    amount: item.amount || 0
   }));
 
   const renderStatus = (status) => {
