@@ -11,8 +11,6 @@ const Donations = () => {
   const [searchText, setSearchText] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
   
-
-
   useEffect(() => {
     axios.get('http://localhost:4000/donation/')
       .then((res) => setDonate(res.data))
@@ -39,13 +37,33 @@ const Donations = () => {
   };
 
   const filteredDonations = donate.filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.email.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.contact.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.amount.toString().includes(searchText) ||
-    item.helpGiven.toLowerCase().includes(searchText.toLowerCase())
-  );
+    (item?.donorName || '').toLowerCase().includes(searchText.toLowerCase()) ||
+    (item?.email || '').toLowerCase().includes(searchText.toLowerCase()) ||
+    (item?.contact || '').toLowerCase().includes(searchText.toLowerCase()) ||
+    (item?.amount?.toString() || '').includes(searchText) ||
+    (item?.campaignName || '').toLowerCase().includes(searchText.toLowerCase())
+  ).map(item => ({
+    ...item,
+    email: item.email || 'N/A',
+    contact: item.contact || 'N/A',
+    status: item.status || 'Pending',
+    campaignName: item.campaignName || 'General Donation'
+  }));
 
+  const renderStatus = (status) => {
+    const statusColors = {
+      'Paid': 'bg-green-100 text-green-800',
+      'Pending': 'bg-yellow-100 text-yellow-800',
+      'Failed': 'bg-red-100 text-red-800'
+    };
+    const colorClass = statusColors[status] || 'bg-gray-100 text-gray-800';
+    return (
+      <span className={`inline-flex px-2 py-1 text-xs font-medium ${colorClass} rounded-full`}>
+        {status}
+      </span>
+    );
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -86,16 +104,16 @@ const Donations = () => {
                 <tbody>
                   {filteredDonations.map((item) => (
                     <tr key={item._id} className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">{item.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">{item.donorName}</td>
                       <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.contact}</td>
                       <td className="px-6 py-4 text-sm text-gray-900 border border-gray-300">Rs.{item.amount}</td>
                       <td className="px-6 py-4 border border-gray-300">
-                        <span className="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                          {item.status}
-                        </span>
+                        {renderStatus(item.status)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">{item.helpGiven}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500 border border-gray-300">
+                        {item.campaignName}
+                      </td>
                       <td className="px-6 py-4 text-center border border-gray-300">
                         <button
                           onClick={() => handleDelete(item._id)}

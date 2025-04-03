@@ -54,20 +54,38 @@ const DonateForm = () => {
     setEmailError(value.includes('@') ? '' : "Email must contain '@'")
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Validate all fields
+    if (!name || !email || !contact || !amount) {
+      setNameError(!name ? 'Name is required' : '');
+      setEmailError(!email ? 'Email is required' : '');
+      setContactError(!contact ? 'Contact is required' : '');
+      setAmountError(!amount ? 'Amount is required' : '');
+      return;
+    }
+
     const donateData = {
-      name,
+      donorName: name, // Changed from name to donorName
+      amount: parseInt(amount),
+      campaignName: helpGiven || 'General Donation', // Added campaignName field
       email,
       contact,
-      amount,
-      status,
-      helpGiven,
+      status: 'Pending'
     }
-    axios
-      .post('http://localhost:4000/donation/', donateData)
-      .then(() => navigate('/cardDetails'))
-      .catch((err) => console.error(`Error: ${err?.response?.data}`))
+
+    try {
+      const response = await axios.post('http://localhost:4000/donation/', donateData);
+      if (response.data) {
+        localStorage.setItem('donationId', response.data._id);
+        localStorage.setItem('donationDetails', JSON.stringify(donateData));
+        navigate('/cardDetails');
+      }
+    } catch (err) {
+      console.error('Error submitting donation:', err?.response?.data || err.message);
+      alert(err?.response?.data?.error || 'There was an error processing your donation. Please try again.');
+    }
   }
 
   const handleClose = () => {

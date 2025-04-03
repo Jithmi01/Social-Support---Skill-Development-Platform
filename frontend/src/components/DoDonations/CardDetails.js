@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { notification } from 'antd';
+import axios from 'axios';
 import {
   CreditCardIcon,
   ShieldCheckIcon,
@@ -11,6 +12,7 @@ import mastercardLogo from '../../assets/images/mastercard.png';
 import paypalLogo from '../../assets/images/paypal.png';
 import amexLogo from '../../assets/images/amexLogo.png';
 import visa from '../../assets/images/visa.png';
+
 const CardDetails = () => {
   const navigate = useNavigate()
   const [cardholderName, setCardholderName] = useState('')
@@ -19,6 +21,14 @@ const CardDetails = () => {
   const [nameError, setNameError] = useState('')
   const [cardNumberError, setCardNumberError] = useState('')
   const [cvcError, setCvcError] = useState('')
+
+  useEffect(() => {
+    const donationDetails = localStorage.getItem('donationDetails');
+    if (!donationDetails) {
+      navigate('/donate');
+      return;
+    }
+  }, [navigate]);
 
   const validateName = (value) => {
     if (!value) {
@@ -45,6 +55,7 @@ const CardDetails = () => {
     setCardNumberError('')
     return true
   }
+
   const validateCVC = (value) => {
     if (!value) {
       setCvcError('Please enter CVC')
@@ -57,20 +68,38 @@ const CardDetails = () => {
     setCvcError('')
     return true
   }
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isNameValid = validateName(cardholderName);
     const isCardNumberValid = validateCardNumber(cardNumber);
     const isCvcValid = validateCVC(cvc);
 
     if (isNameValid && isCardNumberValid && isCvcValid) {
-        notification.success({ 
-            message: 'Payment Successful', 
-            description: 'Your Payment is Successful.' 
+      try {
+        const donationId = localStorage.getItem('donationId');
+        await axios.put(`http://localhost:4000/donation/${donationId}`, {
+          status: 'Paid'
         });
+
+        notification.success({ 
+          message: 'Payment Successful', 
+          description: 'Your donation has been processed successfully.' 
+        });
+
+        localStorage.removeItem('donationId');
+        localStorage.removeItem('donationDetails');
+
         navigate('/showdonation');
+      } catch (error) {
+        notification.error({
+          message: 'Payment Failed',
+          description: 'There was an error processing your payment. Please try again.'
+        });
+      }
     }
-};
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
@@ -81,10 +110,9 @@ const CardDetails = () => {
               Your transaction is protected by SSL encryption
             </p>
             <div className="flex items-center space-x-4 mt-6">
-            <div className="w-12 h-8 bg-white/10 rounded flex items-center justify-center">
+              <div className="w-12 h-8 bg-white/10 rounded flex items-center justify-center">
                 <span className="font-bold text-xs"><img src={visa} alt="Amex" width={50} /></span>
               </div>
-              
               <div className="w-12 h-8 bg-white/10 rounded flex items-center justify-center">
                 <span className="font-bold text-xs"><img src={mastercardLogo} alt="Mastercard" width={50} /></span>
               </div>
@@ -123,8 +151,6 @@ const CardDetails = () => {
                 <p className="mt-1 text-sm text-red-600">{nameError}</p>
               )}
             </div>
-
-            
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
                 Card Number
@@ -190,4 +216,5 @@ const CardDetails = () => {
     </div>
   )
 }
+
 export default CardDetails
