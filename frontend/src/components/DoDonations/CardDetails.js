@@ -143,6 +143,11 @@ const CardDetails = () => {
                     setCardholderName(e.target.value)
                     validateName(e.target.value)
                   }}
+                  onKeyDown={(e) => {
+                    if (/\d/.test(e.key)) {
+                      e.preventDefault(); // Prevent numeric input
+                    }
+                  }}
                 />
                 {!nameError && cardholderName && (
                   <CheckCircleIcon
