@@ -46,6 +46,7 @@ const AddDonationModal = ({ isOpen, handleCancel, handleOk, selectedItem }) => {
         }
     };
 
+    
     return (
         <Modal open={isOpen} width={700} footer={null}>
             <div className="modal-container">

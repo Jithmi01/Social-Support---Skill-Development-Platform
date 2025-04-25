@@ -11,6 +11,7 @@ const DonationCard = ({ donation, onEdit, onDelete }) => {
           <span className="text-sm">{donation.location}</span>
         </div>
       </div>
+
       {/* Card Body */}
       <div className="p-5">
         <div className="mb-4">
@@ -32,6 +33,7 @@ const DonationCard = ({ donation, onEdit, onDelete }) => {
           </p>
         </div>
       </div>
+      
       {/* Card Actions */}
       <div className="bg-gray-50 px-5 py-3 flex justify-end space-x-2">
         <button
