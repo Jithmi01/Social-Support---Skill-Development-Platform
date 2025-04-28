@@ -37,7 +37,7 @@ import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 import ManageCampaigns from "./components/Campaign/Admin/ManageCampaigns";
 import ViewCampaigns from "./components/Campaign/User/ViewCampaigns";
-
+import ManageDonations from './components/Campaign/Admin/ManageDonations';
 
 // Function to check if the user is authenticated
 const isAuthenticated = () => {
@@ -320,7 +320,14 @@ function App() {
           </UserLayout>
         }
       />
-      
+      <Route
+        path="/admin/donations"
+        element={
+          <AdminLayout>
+            <ManageDonations />
+          </AdminLayout>
+        }
+      />
       
       <Route path="/" element={<Navigate to={isAuthenticated() ? "/userDash" : "/login"} />} />
     </Routes>
