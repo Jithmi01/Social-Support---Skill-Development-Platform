@@ -41,32 +41,26 @@ High school dropout rates among poor communities lead to limited career prospect
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/EmpowerHub.git
-   cd EmpowerHub
-   ```
-
-2. Install frontend dependencies:
+1. Install frontend dependencies:
    ```bash
    cd client
    npm install
    ```
 
-3. Install backend dependencies:
+2. Install backend dependencies:
    ```bash
    cd ../server
    npm install
    ```
 
-4. Set up your environment variables (`.env` file):
+3. Set up your environment variables (`.env` file):
    ```
    MONGO_URI=your_mongo_db_connection_string
    JWT_SECRET=your_jwt_secret
    OPENAI_API_KEY=your_openai_api_key (if using AI feature)
    ```
 
-5. Run the app:
+4. Run the app:
 
    - Backend:
      ```
