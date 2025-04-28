@@ -2,20 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Modal, Table, message, Button } from "antd";
 import courseService from "../../services/courseService";
 
+// Modal to display enrolled users for a specific course
 const EnrolledUsersModal = ({ open, onClose, courseId }) => {
   // State variables to manage enrolled users, loading state, and course data
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState();
 
-  // useEffect hook to fetch enrolled users when the modal is opened and courseId is available
+  // Fetch enrolled users and course details when modal opens
   useEffect(() => {
     if (open && courseId) {
       fetchEnrolledUsers();
     }
   }, [open, courseId]);
 
-  // Function to simulate fetching enrolled users and course data
+  // Function to fetch enrolled users and course data
   const fetchEnrolledUsers = async () => {
     setLoading(true);
     try {
@@ -30,15 +31,15 @@ const EnrolledUsersModal = ({ open, onClose, courseId }) => {
     }
   };
 
-  // Function to generate a certificate for a user
+  // Function to generate and print a certificate for a user
   const generateCertificate = (user) => {
-    // Create a new window to display the certificate
+    // Open a new window for the certificate
     const certificateWindow = window.open('', '_blank', 'width=800,height=600');
     certificateWindow.document.write(`
       <html>
         <head>
           <style>
-            /* Styling for certificate layout */
+            /* Certificate page styling */
             body {
               font-family: 'Arial', sans-serif;
               display: flex;
@@ -98,11 +99,11 @@ const EnrolledUsersModal = ({ open, onClose, courseId }) => {
       </html>
     `);
 
-    certificateWindow.document.close(); // Close the document to allow rendering
-    certificateWindow.print(); // Trigger the print dialog
+    certificateWindow.document.close(); // Close document writing
+    certificateWindow.print(); // Trigger the browser print dialog
   };
 
-  // Table columns for displaying enrolled users
+  // Define columns for the users table
   const columns = [
     {
       title: "User ID",
@@ -123,7 +124,7 @@ const EnrolledUsersModal = ({ open, onClose, courseId }) => {
       title: "Action",
       key: "action",
       render: (_, user) => (
-        // Render a button to print certificate for each user
+        // Button to print a certificate for each user
         <Button type="primary" onClick={() => generateCertificate(user)}>
           Print Certificate
         </Button>
@@ -134,17 +135,17 @@ const EnrolledUsersModal = ({ open, onClose, courseId }) => {
   return (
     <Modal
       title="Enrolled Users"
-      open={open} // Modal open state
-      onCancel={onClose} // Close modal when triggered
-      footer={null} // No footer needed in this modal
-      width={800} // Set modal width
+      open={open} // Control modal visibility
+      onCancel={onClose} // Close modal
+      footer={null} // No footer buttons
+      width={800} // Modal width
     >
-      {/* Display the table of enrolled users */}
+      {/* Display enrolled users in a table */}
       <Table
-        columns={columns} // Table columns definition
-        dataSource={enrolledUsers} // Data source for the table
-        rowKey="_id" // Row key for unique identification
-        loading={loading} // Show loading spinner while fetching data
+        columns={columns} // Table columns
+        dataSource={enrolledUsers} // Users data
+        rowKey="_id" // Unique row key
+        loading={loading} // Show loading indicator
       />
     </Modal>
   );
