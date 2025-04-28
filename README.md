@@ -1,5 +1,6 @@
 # EmpowerHub  
-**Bridging Education and Career Opportunities for Underprivileged Youth in Sri Lanka**
+**Bridging Education and Career Opportunities for Underprivileged Youth & 
+Contributing to social welfare in difficult regions in Sri Lanka**
 
 ## Introduction
 EmpowerHub is a MERN Stack-based web application designed to address educational and socio-economic disparities among underprivileged youth in Sri Lanka.  
